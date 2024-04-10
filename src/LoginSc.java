@@ -10,9 +10,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-public class Schermata extends MioFrame implements ActionListener,WindowListener {
-    public Schermata(String titolo){
-        LoginSc login = new LoginSc("login");
+public class LoginSc extends MioFrame implements ActionListener,WindowListener {
+    public LoginSc(String titolo){
+        JLabel login = new JLabel("Ciao!");
     }
     @Override
     public void actionPerformed(ActionEvent e) {
