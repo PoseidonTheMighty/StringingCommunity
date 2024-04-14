@@ -31,7 +31,7 @@ public abstract class MioFrame extends JFrame implements WindowListener {
 
     @Override
     public void windowClosed(WindowEvent e) {
-
+        System.exit(0);
     }
 
     @Override
