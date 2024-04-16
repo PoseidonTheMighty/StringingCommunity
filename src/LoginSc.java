@@ -15,35 +15,6 @@ public class LoginSc extends MioFrame implements ActionListener,WindowListener {
     Popup p;
 
     public LoginSc(String titolo){
-        GridLayout gl = new GridLayout(0, 4, 2, 2);
-        this.setLayout(gl);
-
-        JLabel lg = new JLabel("LOGIN");
-        this.add(lg);
-
-
-
-
-
-
-        JFrame f = new JFrame("pop");
-
-        // create a label
-        JLabel l = new JLabel("This is a popup");
-
-        f.setSize(400, 400);
-
-        PopupFactory pf = new PopupFactory();
-
-        // create a panel
-        JPanel p2 = new JPanel();
-
-        p2.add(l);
-
-        // create a popup
-        p = pf.getPopup(f, p2, 180, 100);
-
-        f.show();
     }
     @Override
     public void actionPerformed(ActionEvent e) {

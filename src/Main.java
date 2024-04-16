@@ -6,6 +6,7 @@ public class Main {
         FlatLightLaf.setup();
 
         Schermata sc = new Schermata("Stringing Community");
+        sc.setBounds(400, 200, 500, 300);
         sc.rendiVisibile(sc);
     }
 }

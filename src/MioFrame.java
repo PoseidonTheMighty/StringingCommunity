@@ -14,7 +14,6 @@ public abstract class MioFrame extends JFrame implements WindowListener {
     }
 
     public void rendiVisibile(MioFrame f){
-        f.pack();
         f.setLocationRelativeTo(null);
         f.setVisible(true);
     }
