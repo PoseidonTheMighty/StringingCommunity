@@ -57,14 +57,46 @@ public class Schermata extends MioFrame implements ActionListener,WindowListener
         b1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(t1.getText().toString().equals("admin") && t2.getText().toString().equals("ciao")){
+                Boolean matched = false;
+                String uname = t1.getText().toString();
+                String pwd = t2.getText().toString();
+
+                try {
+                    FileReader fr = new FileReader("login.txt");
+                    BufferedReader br = new BufferedReader(fr);
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        if (line.equals(uname + "\t" + pwd)) {
+                            matched = true;
+                            break;
+                        }
+                    }
+                    fr.close();
+                }catch(Exception exception){
+
+                }
+
+
+                if(matched){
+                    dispose();
+                    LoginSc sc = new LoginSc("StringingCommunity");
+                    sc.setBounds(400, 200, 400, 300);
+                    sc.setVisible(true);
+                }
+                else{
+                    l2.setText("Invalid Username or Password");
+                }
+
+
+
+                /*if(t1.getText().toString().equals("admin") && t2.getText().toString().equals("ciao")){
                     dispose();
                     LoginSc sc = new LoginSc("StringingCommunity");
                     sc.setBounds(400, 200, 400, 300);
                     sc.setVisible(true);
                 }
                 else
-                    l2.setText("Invalid Username or Password");
+                    l2.setText("Invalid Username or Password");*/
             }
         });
 
@@ -76,35 +108,7 @@ public class Schermata extends MioFrame implements ActionListener,WindowListener
                 s.setBounds(200, 200, 500, 300);
             }
         });
-
-        /*this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.getContentPane().setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
-
-        JPanel panel = new JPanel();
-
-        JLabel email = new JLabel("E-Mail:");
-        JLabel pass = new JLabel("Password:");
-
-        JTextField input_email = new JTextField();
-        JTextField input_pass = new JTextField();
-
-        JButton log = new JButton("LOGIN");
-        JButton reg = new JButton("REGISTER");
-
-        panel.add(email);
-        panel.add(input_email);
-        panel.add(pass);
-        panel.add(input_pass);
-        panel.add(log);
-        panel.add(reg);
-        panel.setPreferredSize(new Dimension(400, 100));
-        panel.setMaximumSize(new Dimension(400, 100));
-        panel.setBorder(BorderFactory.createTitledBorder("demo"));
-
-        this.getContentPane().add(panel);
-        this.setSize(550, 300);
-        this.setVisible(true);*/
-        }
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {

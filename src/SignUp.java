@@ -30,7 +30,7 @@ public class SignUp extends MioFrame implements ActionListener,WindowListener{
             public void actionPerformed(ActionEvent e) {
                 try {
                     FileWriter fw = new FileWriter("login.txt", true);
-                    fw.write(t1.getText()+"\t"+t2.getText());
+                    fw.write(t1.getText()+"\t"+t2.getText()+"\n");
                     fw.close();
                     JFrame f = new JFrame();
                     JOptionPane.showMessageDialog(f, "Registration Completed");
