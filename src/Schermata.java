@@ -17,7 +17,7 @@ public class Schermata extends MioFrame implements ActionListener,WindowListener
     public Schermata(String titolo){
         setLayout(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-
+        //ciao
 
         l1 = new JLabel("Stringing Community");
         l1.setFont(new Font("Times New Roman", Font.BOLD, 30));
