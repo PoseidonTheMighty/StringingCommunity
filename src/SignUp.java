@@ -8,7 +8,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.SQLOutput;
 
 public class SignUp extends MioFrame implements ActionListener,WindowListener{
     JTextField t1, t2;
@@ -61,6 +60,18 @@ public class SignUp extends MioFrame implements ActionListener,WindowListener{
                 }catch(Exception exception){}
             }
         }));
+
+        try {
+            BufferedImage img = ImageIO.read(getClass().getResource("/immagineRegistrazione.png")); // Change this to your image file path
+            Image dimg = img.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+            ImageIcon imageIcon = new ImageIcon(dimg);
+            JLabel imageLabel = new JLabel(imageIcon);
+            imageLabel.setBounds(300, 150, 200, 200); // Adjust position and size as needed
+            add(imageLabel);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
 
         add(l3);
