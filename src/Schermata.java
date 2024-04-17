@@ -12,26 +12,31 @@ public class Schermata extends MioFrame implements ActionListener,WindowListener
 
     JTextField t1, t2;
     JButton b1, b2;
-    JLabel l1, l2;
+    JLabel l1, l2,l3,l4;
 
     public Schermata(String titolo){
         setLayout(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 
-        l1 = new JLabel("Login");
+        l1 = new JLabel("Stringing Community");
         l1.setFont(new Font("Times New Roman", Font.BOLD, 30));
         l1.setForeground(Color.RED);
-        l1.setBounds(130, 10, 300, 30);
+        l1.setBounds(20, 10, 315, 30);
 
 
+
+        l3 = new JLabel("Email:");
+        l3.setBounds(60, 60, 60, 30);
 
         t1 = new JTextField(60);
         t1.setBounds(100, 60, 120, 30);
 
         l2 = new JLabel("");
-        l2.setBounds(250, 80, 300, 30);
+        l2.setBounds(80, 220, 300, 30);
 
+        l4 = new JLabel("Password:");
+        l4.setBounds(40, 100, 60, 30);
 
         t2 = new JPasswordField(60);
         t2.setBounds(100, 100, 120, 30);
@@ -42,11 +47,13 @@ public class Schermata extends MioFrame implements ActionListener,WindowListener
 
 
         b2 = new JButton("Sign Up");
-        b2.setBounds(120, 170, 80, 30);
+        b2.setBounds(120, 180, 80, 30);
 
+        add(l3);
         add(l1);
         add(l2);
         add(t1);
+        add(l4);
         add(t2);
         add(b1);
         add(b2);
