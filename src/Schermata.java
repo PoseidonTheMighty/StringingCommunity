@@ -11,7 +11,7 @@ import java.io.*;
 public class Schermata extends MioFrame implements ActionListener,WindowListener {
 
     JTextField t1, t2;
-    JButton b1, b2;
+    JButton b1, b2, b3;
     JLabel l1, l2,l3,l4;
 
     public Schermata(String titolo){
@@ -49,6 +49,9 @@ public class Schermata extends MioFrame implements ActionListener,WindowListener
         b2 = new JButton("Sign Up");
         b2.setBounds(120, 180, 80, 30);
 
+        b3 = new JButton("Reset Password");
+        b3.setBounds(205, 160, 120, 30);
+
         add(l3);
         add(l1);
         add(l2);
@@ -57,6 +60,7 @@ public class Schermata extends MioFrame implements ActionListener,WindowListener
         add(t2);
         add(b1);
         add(b2);
+        add(b3);
 
 
 
@@ -94,6 +98,9 @@ public class Schermata extends MioFrame implements ActionListener,WindowListener
                     l2.setText("Invalid Username or Password");
                 }
 
+                if(!matched) {
+                    add(b3);
+                }
 
 
                 /*if(t1.getText().toString().equals("admin") && t2.getText().toString().equals("ciao")){
