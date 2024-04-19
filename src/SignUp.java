@@ -25,12 +25,12 @@ public class SignUp extends MioFrame implements ActionListener,WindowListener{
         l4 = new JLabel("Stringing Community");
         l4.setFont(new Font("Sunny Spell Basic", Font.BOLD, 15));
         l4.setForeground(Color.BLACK);
-        l4.setBounds(250, 80, 180, 30);
+        l4.setBounds(250, 100, 180, 30);
 
         l5 = new JLabel("Più film che indiani");
         l5.setFont(new Font("Sunny Spell Basic", Font.BOLD, 15));
         l5.setForeground(Color.BLACK);
-        l5.setBounds(280, 100, 180, 30);
+        l5.setBounds(280, 120, 180, 30);
 
         l1 = new JLabel("Email:");
         l1.setBounds(60, 60, 80, 30);
@@ -63,10 +63,10 @@ public class SignUp extends MioFrame implements ActionListener,WindowListener{
 
         try {
             BufferedImage img = ImageIO.read(getClass().getResource("/immagineRegistrazione.png")); // Change this to your image file path
-            Image dimg = img.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+            Image dimg = img.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
             ImageIcon imageIcon = new ImageIcon(dimg);
             JLabel imageLabel = new JLabel(imageIcon);
-            imageLabel.setBounds(300, 150, 200, 200); // Adjust position and size as needed
+            imageLabel.setBounds(0, 0, 40, 40); // Adjust position and size as needed
             add(imageLabel);
         } catch (IOException e) {
             e.printStackTrace();
