@@ -91,7 +91,7 @@ public class Schermata extends MioFrame implements ActionListener,WindowListener
                 if(matched){
                     dispose();
                     LoginSc sc = new LoginSc("StringingCommunity");
-                    sc.setBounds(400, 200, 400, 300);
+                    sc.setBounds(400, 200, 2000, 2000);
                     sc.setVisible(true);
                 }
                 else{
