@@ -33,7 +33,7 @@ public class Schermata extends MioFrame implements ActionListener,WindowListener
         t1.setBounds(100, 60, 120, 30);
 
         l2 = new JLabel("");
-        l2.setBounds(80, 220, 300, 30);
+        l2.setBounds(80, 235, 300, 30);
 
         l4 = new JLabel("Password:");
         l4.setBounds(40, 100, 60, 30);
@@ -50,7 +50,7 @@ public class Schermata extends MioFrame implements ActionListener,WindowListener
         b2.setBounds(120, 180, 80, 30);
 
         b3 = new JButton("Reset Password");
-        b3.setBounds(205, 160, 120, 30);
+        b3.setBounds(100, 210, 120, 30);
 
         add(l3);
         add(l1);
