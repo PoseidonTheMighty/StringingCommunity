@@ -96,6 +96,8 @@ public class Schermata extends MioFrame implements ActionListener,WindowListener
                 else{
                     l2.setText("Invalid Username or Password");
                     add(b3);
+                    revalidate();
+                    repaint();
                 }
             }
         });
@@ -115,7 +117,7 @@ public class Schermata extends MioFrame implements ActionListener,WindowListener
                 PswForgot pf;
                 pf = new PswForgot();
                 pf.setVisible(true);
-                pf.setBounds(200, 200, 500, 300);
+                pf.setBounds(400, 200, 330, 300);
             }
         });
     }
