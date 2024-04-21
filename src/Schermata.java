@@ -60,7 +60,6 @@ public class Schermata extends MioFrame implements ActionListener,WindowListener
         add(t2);
         add(b1);
         add(b2);
-        add(b3);
 
 
 
@@ -68,7 +67,7 @@ public class Schermata extends MioFrame implements ActionListener,WindowListener
         b1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Boolean matched = false;
+                boolean matched = false;
                 String uname = t1.getText().toString();
                 String pwd = t2.getText().toString();
 
@@ -96,21 +95,8 @@ public class Schermata extends MioFrame implements ActionListener,WindowListener
                 }
                 else{
                     l2.setText("Invalid Username or Password");
-                }
-
-                if(!matched) {
                     add(b3);
                 }
-
-
-                /*if(t1.getText().toString().equals("admin") && t2.getText().toString().equals("ciao")){
-                    dispose();
-                    LoginSc sc = new LoginSc("StringingCommunity");
-                    sc.setBounds(400, 200, 400, 300);
-                    sc.setVisible(true);
-                }
-                else
-                    l2.setText("Invalid Username or Password");*/
             }
         });
 
@@ -120,6 +106,16 @@ public class Schermata extends MioFrame implements ActionListener,WindowListener
                 SignUp s = new SignUp();
                 s.setVisible(true);
                 s.setBounds(200, 200, 500, 300);
+            }
+        });
+
+        b3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                PswForgot pf;
+                pf = new PswForgot();
+                pf.setVisible(true);
+                pf.setBounds(200, 200, 500, 300);
             }
         });
     }
