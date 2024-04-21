@@ -19,17 +19,17 @@ public class SignUp extends MioFrame implements ActionListener,WindowListener{
 
         l3 = new JLabel("Registrati");
         l3.setFont(new Font("Times New Roman", Font.BOLD, 30));
-        l3.setForeground(Color.RED);
+        l3.setForeground(Color.white);
         l3.setBounds(75, 20, 300, 40);
 
         l4 = new JLabel("Stringing Community");
         l4.setFont(new Font("Sunny Spell Basic", Font.BOLD, 15));
-        l4.setForeground(Color.BLACK);
+        l4.setForeground(Color.white);
         l4.setBounds(250, 100, 180, 30);
 
         l5 = new JLabel("Più film che indiani");
         l5.setFont(new Font("Sunny Spell Basic", Font.BOLD, 15));
-        l5.setForeground(Color.BLACK);
+        l5.setForeground(Color.white);
         l5.setBounds(280, 120, 180, 30);
 
         l1 = new JLabel("Email:");
@@ -62,7 +62,7 @@ public class SignUp extends MioFrame implements ActionListener,WindowListener{
         }));
 
         try {
-            BufferedImage img = ImageIO.read(getClass().getResource("/immagineRegistrazione.png")); // Change this to your image file path
+            BufferedImage img = ImageIO.read(getClass().getResource("logo.png")); // Change this to your image file path
             Image dimg = img.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
             ImageIcon imageIcon = new ImageIcon(dimg);
             JLabel imageLabel = new JLabel(imageIcon);
