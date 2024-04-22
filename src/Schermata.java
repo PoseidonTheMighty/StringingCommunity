@@ -21,31 +21,44 @@ public class Schermata extends MioFrame implements ActionListener, WindowListene
         l1 = new JLabel("Stringing Community");
         l1.setFont(new Font("Gotham", Font.BOLD, 30));
         l1.setForeground(Color.white);
-        l1.setBounds(20, 10, 315, 30);
+        l1.setBounds(10, 10, 315, 35);
 
         l3 = new JLabel("Email:");
-        l3.setBounds(60, 60, 60, 30);
+        l3.setFont(new Font("Netflix Sans", Font.ITALIC, 14));
+        l3.setForeground(Color.white);
+        l3.setBounds(55, 60, 60, 30);
 
         t1 = new JTextField(60);
         t1.setBounds(100, 60, 120, 30);
 
         l2 = new JLabel("");
-        l2.setBounds(80, 235, 300, 30);
+        l2.setBounds(80, 245, 300, 30);
 
         l4 = new JLabel("Password:");
-        l4.setBounds(40, 100, 60, 30);
+        l4.setFont(new Font("Netflix Sans", Font.ITALIC, 14));
+        l4.setForeground(Color.white);
+        l4.setBounds(30, 100, 90, 30);
 
         t2 = new JPasswordField(60);
         t2.setBounds(100, 100, 120, 30);
 
         b1 = new JButton("Sign In");
-        b1.setBounds(120, 140, 80, 30);
+        b1.setFont(new Font("Gotham", Font.BOLD, 14));
+        b1.setForeground(Color.black);
+        b1.setBackground(Color.white);
+        b1.setBounds(110, 140, 100, 33);
 
         b2 = new JButton("Sign Up");
-        b2.setBounds(120, 180, 80, 30);
+        b2.setFont(new Font("Gotham", Font.BOLD, 14));
+        b2.setForeground(Color.black);
+        b2.setBackground(Color.white);
+        b2.setBounds(110, 180, 100, 33);
 
         b3 = new JButton("Reset Password");
-        b3.setBounds(100, 210, 120, 30);
+        b3.setFont(new Font("Gotham", Font.BOLD, 12));
+        b3.setForeground(Color.black);
+        b3.setBackground(Color.white);
+        b3.setBounds(100, 220, 130, 30);
 
         add(l3);
         add(l1);
@@ -87,7 +100,7 @@ public class Schermata extends MioFrame implements ActionListener, WindowListene
                 if (matched) {
                     dispose();
                     LoginSc sc = new LoginSc("StringingCommunity");
-                    sc.setBounds(400, 200, 2000, 2000);
+                    sc.setBounds(0, 0, 2000, 2000);
                     sc.setVisible(true);
                 } else {
                     l2.setText("Invalid Username or Password");
@@ -113,7 +126,7 @@ public class Schermata extends MioFrame implements ActionListener, WindowListene
                 PswForgot pf;
                 pf = new PswForgot();
                 pf.setVisible(true);
-                pf.setBounds(400, 200, 330, 300);
+                pf.setBounds(400, 200, 330, 250);
             }
         });
     }

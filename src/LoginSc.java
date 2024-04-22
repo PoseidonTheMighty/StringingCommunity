@@ -3,6 +3,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URI;
@@ -134,8 +136,23 @@ public class LoginSc extends MioFrame implements ActionListener {
                     xOffset = startingX; // Reset x-coordinate offset
                 }
                 btn.setBounds(xOffset + col * 210, yOffset, 200, 250); // Set bounds for button
+                btn.setCursor(new Cursor(Cursor.HAND_CURSOR)); // Set cursor to hand when hovering
                 btn.addActionListener(new ButtonClickListener(links[i]));
                 contentPane.add(btn);
+
+                // Add hover effect
+                btn.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                        btn.setBorder(BorderFactory.createLineBorder(Color.WHITE, 3)); // Change border color
+                    }
+
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                        btn.setBorder(BorderFactory.createEmptyBorder()); // Reset border
+                    }
+                });
+
             } catch (IOException e) {
                 e.printStackTrace();
             }

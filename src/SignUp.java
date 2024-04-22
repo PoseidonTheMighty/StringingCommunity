@@ -18,34 +18,37 @@ public class SignUp extends MioFrame implements ActionListener,WindowListener{
         setLayout(null);
 
         l3 = new JLabel("Registrati");
-        l3.setFont(new Font("Times New Roman", Font.BOLD, 30));
+        l3.setFont(new Font("Gotham", Font.BOLD, 30));
         l3.setForeground(Color.white);
         l3.setBounds(75, 20, 300, 40);
 
         l4 = new JLabel("Stringing Community");
-        l4.setFont(new Font("Sunny Spell Basic", Font.BOLD, 15));
+        l4.setFont(new Font("Gotham", Font.BOLD, 15));
         l4.setForeground(Color.white);
-        l4.setBounds(250, 100, 180, 30);
+        l4.setBounds(250, 80, 180, 30);
 
         l5 = new JLabel("Più film che indiani");
-        l5.setFont(new Font("Sunny Spell Basic", Font.BOLD, 15));
+        l5.setFont(new Font("Gotham", Font.BOLD, 15));
         l5.setForeground(Color.white);
-        l5.setBounds(280, 120, 180, 30);
+        l5.setBounds(280, 100, 180, 30);
 
         l1 = new JLabel("Email:");
-        l1.setBounds(60, 60, 80, 30);
+        l1.setBounds(60, 80, 80, 30);
 
         l2 = new JLabel("Password:");
-        l2.setBounds(40, 100, 80, 30);
+        l2.setBounds(40, 120, 80, 30);
 
         t1 = new JTextField(60);
-        t1.setBounds(100, 60, 80, 30);
+        t1.setBounds(100, 80, 110, 30);
 
         t2 = new JPasswordField(60);
-        t2.setBounds(100, 100, 80, 30);
+        t2.setBounds(100, 120, 110, 30);
 
         b1 = new JButton("Sign Up");
-        b1.setBounds(100, 140, 80, 30);
+        b1.setFont(new Font("Gotham", Font.BOLD, 14));
+        b1.setForeground(Color.black);
+        b1.setBackground(Color.white);
+        b1.setBounds(105, 160, 100, 33);
 
         b1.addActionListener((new ActionListener() {
             @Override
@@ -74,7 +77,7 @@ public class SignUp extends MioFrame implements ActionListener,WindowListener{
             Image dimg = img.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
             ImageIcon imageIcon = new ImageIcon(dimg);
             JLabel imageLabel = new JLabel(imageIcon);
-            imageLabel.setBounds(0, 0, 40, 40); // Adjust position and size as needed
+            imageLabel.setBounds(320, 140, 40, 40); // Adjust position and size as needed
             add(imageLabel);
         } catch (IOException e) {
             e.printStackTrace();

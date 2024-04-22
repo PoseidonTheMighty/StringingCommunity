@@ -10,7 +10,7 @@ public class Main {
         FlatMacDarkLaf.setup();
 
         Schermata sc = new Schermata("Stringing Community");
-        sc.setBounds(400, 200, 330, 300);
+        sc.setBounds(400, 200, 330, 330);
         sc.rendiVisibile(sc);
     }
 }
