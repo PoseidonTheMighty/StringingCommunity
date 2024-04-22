@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowListener;
 import com.formdev.flatlaf.FlatLightLaf;
 import java.io.*;
+import java.net.URL;
 
 public class Schermata extends MioFrame implements ActionListener, WindowListener {
 
@@ -17,6 +18,8 @@ public class Schermata extends MioFrame implements ActionListener, WindowListene
         setLayout(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         //ciao
+
+
 
         l1 = new JLabel("Stringing Community");
         l1.setFont(new Font("Gotham", Font.BOLD, 30));
@@ -101,6 +104,7 @@ public class Schermata extends MioFrame implements ActionListener, WindowListene
                     dispose();
                     LoginSc sc = new LoginSc("StringingCommunity");
                     sc.setBounds(0, 0, 2000, 2000);
+                    sc.setExtendedState(JFrame.MAXIMIZED_BOTH);
                     sc.setVisible(true);
                 } else {
                     l2.setText("Invalid Username or Password");

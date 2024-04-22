@@ -1,7 +1,10 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 
@@ -12,9 +15,9 @@ public class PswForgot extends MioFrame implements ActionListener {
 
     public PswForgot() {
         l3 = new JLabel("Reset Password");
-        l3.setFont(new Font("Times New Roman", Font.BOLD, 30));
-        l3.setForeground(Color.RED);
-        l3.setBounds(75, 20, 300, 40);
+        l3.setFont(new Font("Gotham", Font.BOLD, 30));
+        l3.setForeground(Color.WHITE);
+        l3.setBounds(50, 10, 300, 40);
 
         l1 = new JLabel("Email:");
         l1.setBounds(60, 60, 80, 30);
@@ -23,14 +26,28 @@ public class PswForgot extends MioFrame implements ActionListener {
         l2.setBounds(40, 100, 80, 30);
 
         t1 = new JTextField(60);
-        t1.setBounds(100, 60, 80, 30);
+        t1.setBounds(100, 60, 100, 30);
 
         t2 = new JPasswordField(60);
-        t2.setBounds(100, 100, 80, 30);
+        t2.setBounds(100, 100, 100, 30);
 
         b1 = new JButton("Reset");
-        b1.setBounds(100, 140, 150, 30);
+        b1.setFont(new Font("Gotham", Font.BOLD, 14));
+        b1.setForeground(Color.black);
+        b1.setBackground(Color.white);
+        b1.setBounds(90, 150, 120, 30);
         b1.addActionListener(this);
+
+        try {
+            BufferedImage img = ImageIO.read(getClass().getResource("logo.png")); // Change this to your image file path
+            Image dimg = img.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+            ImageIcon imageIcon = new ImageIcon(dimg);
+            JLabel imageLabel = new JLabel(imageIcon);
+            imageLabel.setBounds(230, 75, 40, 40); // Adjust position and size as needed
+            add(imageLabel);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         add(l3);
         add(l1);
@@ -38,6 +55,8 @@ public class PswForgot extends MioFrame implements ActionListener {
         add(t1);
         add(t2);
         add(b1);
+
+
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(300, 250);
@@ -70,6 +89,7 @@ public class PswForgot extends MioFrame implements ActionListener {
                     if (parts.length >= 2 && parts[1].equals(newPassword)) {
                         JOptionPane.showMessageDialog(null, "La nuova password non può essere uguale alla vecchia", "Error", JOptionPane.ERROR_MESSAGE);
                         writer.write(line);
+                        this.setVisible(false);
                     } else {
                         writer.write(email + "\t" + newPassword);
                     }
@@ -87,13 +107,14 @@ public class PswForgot extends MioFrame implements ActionListener {
             if (!found) {
                 JOptionPane.showMessageDialog(null, "Mail non trovata", "Error", JOptionPane.ERROR_MESSAGE);
                 tempFile.delete();
-            } else {
-                if (found) {
-                    inputFile.delete();
-                    tempFile.renameTo(inputFile);
-                    JOptionPane.showMessageDialog(null, "Password aggiornata", "Success", JOptionPane.INFORMATION_MESSAGE);
-                }
+            } else if (found) {
+                inputFile.delete();
+                tempFile.renameTo(inputFile);
+                JOptionPane.showMessageDialog(null, "Password aggiornata", "Success", JOptionPane.INFORMATION_MESSAGE);
+                this.setVisible(false);
             }
+
+
         } catch (IOException ex) {
             ex.printStackTrace();
         }
