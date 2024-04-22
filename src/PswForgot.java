@@ -1,23 +1,16 @@
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
 
-public class PswForgot extends MioFrame implements ActionListener,WindowListener{
+public class PswForgot extends MioFrame implements ActionListener {
     JTextField t1, t2;
     JButton b1;
-    JLabel l1, l2, l3, l5;
+    JLabel l1, l2, l3;
 
-    public PswForgot(){
-
-
-
+    public PswForgot() {
         l3 = new JLabel("Reset Password");
         l3.setFont(new Font("Times New Roman", Font.BOLD, 30));
         l3.setForeground(Color.RED);
@@ -35,32 +28,9 @@ public class PswForgot extends MioFrame implements ActionListener,WindowListener
         t2 = new JPasswordField(60);
         t2.setBounds(100, 100, 80, 30);
 
-        b1 = new JButton("Sign Up");
-        b1.setBounds(100, 140, 80, 30);
-
-        b1.addActionListener((new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String uname = t1.getText().trim();
-                String pwd = t2.getText().trim();
-
-                if (uname.isEmpty() || pwd.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Stringing Community dice:\n       Non hai scritto nulla!", "Stringing Community", JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
-
-                try {
-                    FileWriter fw = new FileWriter("login.txt", true);
-                    fw.write(t1.getText()+"\t"+t2.getText()+"\n");
-                    fw.close();
-                    JFrame f = new JFrame();
-                    JOptionPane.showMessageDialog(f, "Registration Completed");
-                    dispose();
-                }catch(Exception exception){}
-            }
-        }));
-
-
+        b1 = new JButton("Reset");
+        b1.setBounds(100, 140, 150, 30);
+        b1.addActionListener(this);
 
         add(l3);
         add(l1);
@@ -69,12 +39,63 @@ public class PswForgot extends MioFrame implements ActionListener,WindowListener
         add(t2);
         add(b1);
 
-
-
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(300, 250);
+        setLayout(null);
+        setVisible(true);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        String email = t1.getText().trim();
+        String newPassword = t2.getText().trim();
 
+        if (email.isEmpty() || newPassword.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Stringing Community dice:\n       Non hai scritto nulla!", "Attenzione", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try {
+            File inputFile = new File("login.txt");
+            File tempFile = new File("temp.txt");
+
+            BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+
+            String line;
+            boolean found = false;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith(email + "\t")) {
+                    String[] parts = line.split("\t");
+                    if (parts.length >= 2 && parts[1].equals(newPassword)) {
+                        JOptionPane.showMessageDialog(null, "La nuova password non può essere uguale alla vecchia", "Error", JOptionPane.ERROR_MESSAGE);
+                        writer.write(line);
+                    } else {
+                        writer.write(email + "\t" + newPassword);
+                    }
+                    writer.newLine();
+                    found = true;
+                } else {
+                    writer.write(line);
+                    writer.newLine();
+                }
+            }
+
+            reader.close();
+            writer.close();
+
+            if (!found) {
+                JOptionPane.showMessageDialog(null, "Mail non trovata", "Error", JOptionPane.ERROR_MESSAGE);
+                tempFile.delete();
+            } else {
+                if (found) {
+                    inputFile.delete();
+                    tempFile.renameTo(inputFile);
+                    JOptionPane.showMessageDialog(null, "Password aggiornata", "Success", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }
