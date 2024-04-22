@@ -7,14 +7,13 @@ import java.awt.event.WindowListener;
 import com.formdev.flatlaf.FlatLightLaf;
 import java.io.*;
 
-
-public class Schermata extends MioFrame implements ActionListener,WindowListener {
+public class Schermata extends MioFrame implements ActionListener, WindowListener {
 
     JTextField t1, t2;
     JButton b1, b2, b3;
-    JLabel l1, l2,l3,l4;
+    JLabel l1, l2, l3, l4;
 
-    public Schermata(String titolo){
+    public Schermata(String titolo) {
         setLayout(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         //ciao
@@ -23,8 +22,6 @@ public class Schermata extends MioFrame implements ActionListener,WindowListener
         l1.setFont(new Font("Times New Roman", Font.BOLD, 30));
         l1.setForeground(Color.RED);
         l1.setBounds(20, 10, 315, 30);
-
-
 
         l3 = new JLabel("Email:");
         l3.setBounds(60, 60, 60, 30);
@@ -41,10 +38,8 @@ public class Schermata extends MioFrame implements ActionListener,WindowListener
         t2 = new JPasswordField(60);
         t2.setBounds(100, 100, 120, 30);
 
-
         b1 = new JButton("Sign In");
         b1.setBounds(120, 140, 80, 30);
-
 
         b2 = new JButton("Sign Up");
         b2.setBounds(120, 180, 80, 30);
@@ -61,15 +56,18 @@ public class Schermata extends MioFrame implements ActionListener,WindowListener
         add(b1);
         add(b2);
 
-
-
-
         b1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String uname = t1.getText().trim();
+                String pwd = t2.getText().trim();
+
+                if (uname.isEmpty() || pwd.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Stringing Community dice:\n       Non hai scritto nulla!", "Attenzione", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
                 boolean matched = false;
-                String uname = t1.getText().toString();
-                String pwd = t2.getText().toString();
 
                 try {
                     FileReader fr = new FileReader("login.txt");
@@ -82,18 +80,16 @@ public class Schermata extends MioFrame implements ActionListener,WindowListener
                         }
                     }
                     fr.close();
-                }catch(Exception exception){
-
+                } catch (Exception exception) {
+                    exception.printStackTrace();
                 }
 
-
-                if(matched){
+                if (matched) {
                     dispose();
                     LoginSc sc = new LoginSc("StringingCommunity");
                     sc.setBounds(400, 200, 2000, 2000);
                     sc.setVisible(true);
-                }
-                else{
+                } else {
                     l2.setText("Invalid Username or Password");
                     add(b3);
                     revalidate();
@@ -127,5 +123,3 @@ public class Schermata extends MioFrame implements ActionListener,WindowListener
 
     }
 }
-
-

@@ -50,6 +50,14 @@ public class SignUp extends MioFrame implements ActionListener,WindowListener{
         b1.addActionListener((new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String uname = t1.getText().trim();
+                String pwd = t2.getText().trim();
+
+                if (uname.isEmpty() || pwd.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Stringing Community dice:\n       Non hai scritto nulla!", "Stringing Community", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
                 try {
                     FileWriter fw = new FileWriter("login.txt", true);
                     fw.write(t1.getText()+"\t"+t2.getText()+"\n");
