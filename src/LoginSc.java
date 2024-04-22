@@ -12,14 +12,14 @@ import java.net.URISyntaxException;
 
 public class LoginSc extends MioFrame implements ActionListener {
 
-    private int buttonsPerRow = 10; // Number of buttons per row
+    private int buttonsPerRow = 10;
 
     private JLabel azione, dramma, fantascienza, commedia, horror;
 
-    private JPanel contentPane; // Panel to hold the content
+    private JPanel contentPane;
 
     public LoginSc(String titolo) {
-        contentPane = new JPanel(null); // JPanel with no layout manager
+        contentPane = new JPanel(null);
 
         JLabel azione = new JLabel("Azione");
         setLabelProperties(azione, 20, 20);
@@ -46,7 +46,7 @@ public class LoginSc extends MioFrame implements ActionListener {
                 "https://streamingcommunity.africa/watch/124", "https://streamingcommunity.africa/watch/7255"
         };
 
-        createButtons(Dramma_img, Dramma_link, 20, 350); // Start at x=10, y=350
+        createButtons(Dramma_img, Dramma_link, 20, 350);
 
         fantascienza = new JLabel("Fantascienza");
         labelFont = fantascienza.getFont();
@@ -55,7 +55,7 @@ public class LoginSc extends MioFrame implements ActionListener {
         contentPane.add(fantascienza);
 
         String[] Fantascienza_img = {"Interstellar.jpg", "Inception.jpg"
-        }; // Add paths to your images
+        };
         String[] Fantascienza_link = {"https://streamingcommunity.africa/watch/112", "https://streamingcommunity.africa/watch/733"
         };
 
@@ -68,7 +68,7 @@ public class LoginSc extends MioFrame implements ActionListener {
         contentPane.add(commedia);
 
         String[] Commedia_img = {"Tutti tranne te.jpeg", "I migliori giorni.jpg", "Rapiniamo il Duce.jpg", "The Wolf of Wall Street.jpg"
-        }; // Add paths to your images
+        };
         String[] Commedia_link = {"https://streamingcommunity.africa/watch/7622", "https://streamingcommunity.africa/watch/8152",
                 "https://streamingcommunity.africa/watch/5726",
                 "https://streamingcommunity.africa/watch/159"
@@ -83,7 +83,7 @@ public class LoginSc extends MioFrame implements ActionListener {
         contentPane.add(horror);
 
         String[] Horror_img = {"La maledizione della Queen Mary.jpeg", "IT.jpg", "IT Capitolo 2.jpg"
-        }; // Add paths to your images
+        };
         String[] Horror_link = {"https://streamingcommunity.africa/watch/6812", "https://streamingcommunity.africa/watch/1123",
                 "https://streamingcommunity.africa/watch/10"
         };
@@ -92,25 +92,25 @@ public class LoginSc extends MioFrame implements ActionListener {
 
 
         JScrollPane scrollPane = new JScrollPane(contentPane);
-        scrollPane.setBounds(0, 0, 800, 600); // Set the bounds of the scroll pane
+        scrollPane.setBounds(0, 0, 800, 600);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
-        // Set the preferred size of the content pane
+
         contentPane.setPreferredSize(new Dimension(760, 1550));
 
-        // Set the unit increment of vertical scrollbar to increase scrolling speed
-        scrollPane.getVerticalScrollBar().setUnitIncrement(16); // Adjust the value as needed
 
-        // Add the scroll pane to the frame
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+
+
         add(scrollPane);
 
-        // Set frame properties
+
         setTitle(titolo);
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null); // Center the frame
-        setResizable(true); // Allow resizing
+        setLocationRelativeTo(null);
+        setResizable(true);
 
         setVisible(true);
     }
@@ -122,8 +122,8 @@ public class LoginSc extends MioFrame implements ActionListener {
     }
 
     private void createButtons(String[] imagePaths, String[] links, int startingX, int startingY) {
-        int xOffset = startingX; // Initial x-coordinate offset
-        int yOffset = startingY; // Initial y-coordinate offset
+        int xOffset = startingX;
+        int yOffset = startingY;
         for (int i = 0; i < imagePaths.length; i++) {
             try {
                 BufferedImage img = ImageIO.read(getClass().getResource(imagePaths[i]));
@@ -131,25 +131,25 @@ public class LoginSc extends MioFrame implements ActionListener {
                 ImageIcon imageIcon = new ImageIcon(dimg);
                 JButton btn = new JButton(imageIcon);
                 int col = i % buttonsPerRow;
-                if (col == 0 && i != 0) { // Start new row
-                    yOffset += 260; // Increase y-coordinate offset
-                    xOffset = startingX; // Reset x-coordinate offset
+                if (col == 0 && i != 0) {
+                    yOffset += 260;
+                    xOffset = startingX;
                 }
-                btn.setBounds(xOffset + col * 210, yOffset, 200, 250); // Set bounds for button
-                btn.setCursor(new Cursor(Cursor.HAND_CURSOR)); // Set cursor to hand when hovering
+                btn.setBounds(xOffset + col * 210, yOffset, 200, 250);
+                btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 btn.addActionListener(new ButtonClickListener(links[i]));
                 contentPane.add(btn);
 
-                // Add hover effect
+
                 btn.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseEntered(MouseEvent e) {
-                        btn.setBorder(BorderFactory.createLineBorder(Color.WHITE, 3)); // Change border color
+                        btn.setBorder(BorderFactory.createLineBorder(Color.WHITE, 3));
                     }
 
                     @Override
                     public void mouseExited(MouseEvent e) {
-                        btn.setBorder(BorderFactory.createEmptyBorder()); // Reset border
+                        btn.setBorder(BorderFactory.createEmptyBorder()); // reset del border
                     }
                 });
 
