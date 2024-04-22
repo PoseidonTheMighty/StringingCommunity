@@ -19,8 +19,8 @@ public class Schermata extends MioFrame implements ActionListener, WindowListene
         //ciao
 
         l1 = new JLabel("Stringing Community");
-        l1.setFont(new Font("Times New Roman", Font.BOLD, 30));
-        l1.setForeground(Color.RED);
+        l1.setFont(new Font("Gotham", Font.BOLD, 30));
+        l1.setForeground(Color.white);
         l1.setBounds(20, 10, 315, 30);
 
         l3 = new JLabel("Email:");

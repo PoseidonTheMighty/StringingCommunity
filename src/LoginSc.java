@@ -97,6 +97,9 @@ public class LoginSc extends MioFrame implements ActionListener {
         // Set the preferred size of the content pane
         contentPane.setPreferredSize(new Dimension(760, 1550));
 
+        // Set the unit increment of vertical scrollbar to increase scrolling speed
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16); // Adjust the value as needed
+
         // Add the scroll pane to the frame
         add(scrollPane);
 
