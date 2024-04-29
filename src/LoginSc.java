@@ -1,25 +1,51 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-public class LoginSc extends MioFrame implements ActionListener {
+public class LoginSc extends MioFrame implements ActionListener, WindowListener {
+
+    JTextField t1;
+    JButton b1;
 
     private int buttonsPerRow = 10;
 
-    private JLabel azione, dramma, fantascienza, commedia, horror;
+    private JLabel azione, dramma, fantascienza, commedia, horror, l1;
 
     private JPanel contentPane;
 
     public LoginSc(String titolo) {
         contentPane = new JPanel(null);
+
+        t1 = new JTextField(60);
+        t1.setBounds(1200, 20, 270, 30);
+        t1.setFont(new Font("Gotham", Font.BOLD, 14));
+        t1.setForeground(Color.white);
+        t1.setBackground(Color.black);
+
+
+        b1 = new JButton("Cerca");
+        b1.setBounds(1470, 20, 110, 30);
+        b1.setFont(new Font("Gotham", Font.BOLD, 14));
+        b1.setForeground(Color.black);
+        b1.setBackground(Color.white);
+
+        l1 = new JLabel("");
+        l1.setBounds(1200, 80, 400, 30);
+
+        add(t1);
+        add(b1);
+
+        b1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                l1.setText("Hai cercato");
+            }
+        });
 
         JLabel azione = new JLabel("Azione");
         setLabelProperties(azione, 20, 20);
