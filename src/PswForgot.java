@@ -69,9 +69,14 @@ public class PswForgot extends MioFrame implements ActionListener {
         String email = t1.getText().trim();
         String newPassword = t2.getText().trim();
 
-        if (email.isEmpty() || newPassword.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Stringing Community dice:\n       Non hai scritto nulla!", "Attenzione", JOptionPane.WARNING_MESSAGE);
-            return;
+        if(t1.getText().contains("@gmail.com")) {
+            if (email.isEmpty() || newPassword.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Stringing Community dice:\n       Non hai scritto nulla!", "Stringing Community", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Non e' presente alcun indirizzo mail!!", "Errore", JOptionPane.ERROR_MESSAGE);
+
         }
 
         try {
