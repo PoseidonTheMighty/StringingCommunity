@@ -53,7 +53,7 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
 
         String[] imagePaths = {"The Avenger.jpg", "Godzilla vs Kong Un nuovo impero.jpg",
                 "Avengers Infinity War.jpeg", "Avengers Endgame.jpeg", "Age of Ultron.jpg"};
-        String[] links = {"https://streamingcommunity.africa/watch/7692", "https://streamingcommunity.africa/watch/5165",
+        String[] links = {"https://streamingcommunity.africa/watch/5165",
                 "https://streamingcommunity.africawatch/632", "https://streamingcommunity.africa/watch/211",
                 "https://streamingcommunity.africa/watch/216", "https://streamingcommunity.africa/watch/217"};
 

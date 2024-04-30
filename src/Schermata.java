@@ -100,18 +100,23 @@ public class Schermata extends MioFrame implements ActionListener, WindowListene
                     exception.printStackTrace();
                 }
 
-                if (matched) {
-                    dispose();
-                    LoginSc sc = new LoginSc("StringingCommunity");
-                    sc.setBounds(0, 0, 2000, 2000);
-                    sc.setExtendedState(JFrame.MAXIMIZED_BOTH);
-                    sc.setVisible(true);
+                if(t1.getText().contains("@gmail.com")) {
+                    if (matched) {
+                        dispose();
+                        LoginSc sc = new LoginSc("StringingCommunity");
+                        sc.setBounds(0, 0, 2000, 2000);
+                        sc.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                        sc.setVisible(true);
+                    } else {
+                        l2.setText("Invalid Username or Password");
+                        add(b3);
+                        revalidate();
+                        repaint();
+                    }
                 } else {
-                    l2.setText("Invalid Username or Password");
-                    add(b3);
-                    revalidate();
-                    repaint();
+                    JOptionPane.showMessageDialog(null, "Non e' presente alcun indirizzo mail!!", "Errore", JOptionPane.ERROR_MESSAGE);
                 }
+
             }
         });
 

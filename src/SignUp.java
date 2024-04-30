@@ -56,9 +56,14 @@ public class SignUp extends MioFrame implements ActionListener,WindowListener{
                 String uname = t1.getText().trim();
                 String pwd = t2.getText().trim();
 
-                if (uname.isEmpty() || pwd.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Stringing Community dice:\n       Non hai scritto nulla!", "Stringing Community", JOptionPane.WARNING_MESSAGE);
-                    return;
+                if(t1.getText().contains("@gmail.com")) {
+                    if (uname.isEmpty() || pwd.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Stringing Community dice:\n       Non hai scritto nulla!", "Stringing Community", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Non e' presente alcun indirizzo mail!!", "Errore", JOptionPane.ERROR_MESSAGE);
+
                 }
 
                 try {
