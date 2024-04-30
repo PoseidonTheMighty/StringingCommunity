@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 
 public class LoginSc extends MioFrame implements ActionListener, WindowListener {
 
@@ -17,6 +18,8 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
     private JLabel azione, dramma, fantascienza, commedia, horror, l1;
 
     private JPanel contentPane;
+
+    ArrayList<Film> list = new ArrayList<Film>();
 
     public LoginSc(String titolo) {
         contentPane = new JPanel(null);
@@ -47,17 +50,16 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
             }
         });
 
+
+
         JLabel azione = new JLabel("Azione");
         setLabelProperties(azione, 20, 20);
         contentPane.add(azione);
 
-        String[] imagePaths = {"The Avenger.jpg", "Godzilla vs Kong Un nuovo impero.jpg",
-                "Avengers Infinity War.jpeg", "Avengers Endgame.jpeg", "Age of Ultron.jpg"};
-        String[] links = {"https://streamingcommunity.africa/watch/5165",
-                "https://streamingcommunity.africawatch/632", "https://streamingcommunity.africa/watch/211",
-                "https://streamingcommunity.africa/watch/216", "https://streamingcommunity.africa/watch/217"};
+        FilmAzione Avengers = new FilmAzione("The Avengers","sgs","af");
+        list.add(Avengers);
 
-        createButtons(imagePaths, links, 20, 50);
+        //createButtons(imagePaths, links, 20, 50);
 
         dramma = new JLabel("Dramma");
         Font labelFont = dramma.getFont();
@@ -65,14 +67,9 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         dramma.setBounds(20, 320, 200, 20);
         contentPane.add(dramma);
 
-        String[] Dramma_img = {"Il fabbricante di lacrime.jpg", "Hustle.jpg", "The Truman Show.jpg", "E colpa mia.jpeg", "Io Sono Leggenda.jpg", "Ferrari.jpg"
-        }; // Add paths to your images
-        String[] Dramma_link = {"https://streamingcommunity.africa/watch/8158",
-                "https://streamingcommunity.africa/watch/5165", "https://streamingcommunity.africa/watch/2501", "https://streamingcommunity.africa/watch/6393",
-                "https://streamingcommunity.africa/watch/124", "https://streamingcommunity.africa/watch/7255"
-        };
 
-        createButtons(Dramma_img, Dramma_link, 20, 350);
+
+        //createButtons(Dramma_img, Dramma_link, 20, 350);
 
         fantascienza = new JLabel("Fantascienza");
         labelFont = fantascienza.getFont();
@@ -80,12 +77,9 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         fantascienza.setBounds(20, 620, 200, 20);
         contentPane.add(fantascienza);
 
-        String[] Fantascienza_img = {"Interstellar.jpg", "Inception.jpg"
-        };
-        String[] Fantascienza_link = {"https://streamingcommunity.africa/watch/112", "https://streamingcommunity.africa/watch/733"
-        };
 
-        createButtons(Fantascienza_img, Fantascienza_link, 20, 650);
+
+        //createButtons(Fantascienza_img, Fantascienza_link, 20, 650);
 
         commedia = new JLabel("Commedia");
         labelFont = commedia.getFont();
@@ -93,14 +87,9 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         commedia.setBounds(20, 920, 200, 20);
         contentPane.add(commedia);
 
-        String[] Commedia_img = {"Tutti tranne te.jpeg", "I migliori giorni.jpg", "Rapiniamo il Duce.jpg", "The Wolf of Wall Street.jpg"
-        };
-        String[] Commedia_link = {"https://streamingcommunity.africa/watch/7622", "https://streamingcommunity.africa/watch/8152",
-                "https://streamingcommunity.africa/watch/5726",
-                "https://streamingcommunity.africa/watch/159"
-        };
 
-        createButtons(Commedia_img, Commedia_link, 20, 950);
+
+        //createButtons(Commedia_img, Commedia_link, 20, 950);
 
         horror = new JLabel("Horror");
         labelFont = horror.getFont();
@@ -108,13 +97,9 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         horror.setBounds(20, 1220, 200, 20);
         contentPane.add(horror);
 
-        String[] Horror_img = {"La maledizione della Queen Mary.jpeg", "IT.jpg", "IT Capitolo 2.jpg"
-        };
-        String[] Horror_link = {"https://streamingcommunity.africa/watch/6812", "https://streamingcommunity.africa/watch/1123",
-                "https://streamingcommunity.africa/watch/10"
-        };
 
-        createButtons(Horror_img, Horror_link, 20, 1250);
+
+        //createButtons(Horror_img, Horror_link, 20, 1250);
 
 
         JScrollPane scrollPane = new JScrollPane(contentPane);
