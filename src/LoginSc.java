@@ -3,81 +3,75 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.io.*;
+import java.net.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class LoginSc extends MioFrame implements ActionListener, WindowListener {
 
     JTextField t1;
     JButton b1;
-    JButton backButton; // New button for going back to the main view
-    JLabel searchResultLabel; // Label for displaying search results
 
-    private JPanel contentPane;
-    Font labelFont;
+    private JLabel azioneLabel, drammaLabel, fantascienzaLabel, commediaLabel, horrorLabel, l1;
 
-    JLabel azione, dramma, fantascienza, commedia, horror;
+    private JPanel contentPane, searchBarPanel;
 
-    ArrayList<Film> filmList = new ArrayList<>(); // Combined list for all genres
-
-    List<JButton> movieButtons = new ArrayList<>(); // List to hold movie buttons
+    ArrayList<Film> moviesList = new ArrayList<>(); // List for all movies
 
     public LoginSc(String titolo) {
         contentPane = new JPanel(null);
 
+        // Create search bar panel
+        searchBarPanel = new JPanel(null);
+        searchBarPanel.setBounds(1200, 20, 380, 50); // Adjusted position for search bar panel
+        searchBarPanel.setBackground(Color.black);
+
         t1 = new JTextField(60);
-        t1.setBounds(1200, 20, 270, 30);
+        t1.setBounds(0, 0, 270, 30);
         t1.setFont(new Font("Gotham", Font.BOLD, 14));
         t1.setForeground(Color.white);
         t1.setBackground(Color.black);
+        t1.setBorder(BorderFactory.createLineBorder(Color.white)); // Add border
 
         b1 = new JButton("Cerca");
-        b1.setBounds(1470, 20, 110, 30);
+        b1.setBounds(290, 0, 90, 30); // Adjusted position for search button
         b1.setFont(new Font("Gotham", Font.BOLD, 14));
         b1.setForeground(Color.black);
         b1.setBackground(Color.white);
 
-        searchResultLabel = new JLabel("");
-        searchResultLabel.setBounds(20, 150, 400, 30);
-        searchResultLabel.setFont(new Font("Gotham", Font.BOLD, 16));
-        searchResultLabel.setForeground(Color.WHITE);
+        searchBarPanel.add(t1);
+        searchBarPanel.add(b1);
 
-        azione = createLabel("Azione", 20, 20);
-        dramma = createLabel("Dramma", 20, 320);
-        fantascienza = createLabel("Fantascienza", 20, 620);
-        commedia = createLabel("Commedia", 20, 920);
-        horror = createLabel("Horror", 20, 1220);
+        // Add search bar panel to contentPane
+        contentPane.add(searchBarPanel);
 
-        add(t1);
-        add(b1);
-        add(searchResultLabel);
+        // Add your labels
+        azioneLabel = createLabel("Azione", 20, 20);
+        contentPane.add(azioneLabel);
 
-        b1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String searchKeyword = t1.getText().trim();
-                if (!searchKeyword.isEmpty()) {
-                    searchMovies(searchKeyword);
-                }
-            }
-        });
+        drammaLabel = createLabel("Dramma", 20, 320);
+        contentPane.add(drammaLabel);
 
-        readMoviesFromFile("Film.txt", filmList); // Read movies from generic file
+        fantascienzaLabel = createLabel("Fantascienza", 20, 620);
+        contentPane.add(fantascienzaLabel);
+
+        commediaLabel = createLabel("Commedia", 20, 920);
+        contentPane.add(commediaLabel);
+
+        horrorLabel = createLabel("Horror", 20, 1220);
+        contentPane.add(horrorLabel);
+
+        readMoviesFromFile("Film.txt", moviesList); // Read movies from a single file
 
         // Now that movies are added to the list, create buttons for each genre
-        createButtons(filmList);
+        createButtons(moviesList, 20);
 
         JScrollPane scrollPane = new JScrollPane(contentPane);
         scrollPane.setBounds(0, 0, 800, 600);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
-        contentPane.setPreferredSize(new Dimension(760, 1550));
+        contentPane.setPreferredSize(new Dimension(1600, 1600)); // Adjust preferred size
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
         add(scrollPane);
@@ -90,6 +84,51 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         setVisible(true);
     }
 
+    private void readMoviesFromFile(String fileName, ArrayList<Film> list) {
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(","); // Split the line by comma
+                if (parts.length == 4) { // Assuming each movie has name, link, image name, and genre
+                    String movieName = parts[0];
+                    String movieLink = parts[1];
+                    String movieImageName = parts[2];
+                    String genre = parts[3]; // Genre is the fourth part
+
+                    // Determine the type of Film subclass based on the genre
+                    Film movie;
+                    switch (genre) {
+                        case "Azione":
+                            movie = new FilmAzione(movieName, movieLink, movieImageName, genre);
+                            list.add(movie);
+                            break;
+                        case "Dramma":
+                            movie = new FilmDramma(movieName, movieLink, movieImageName, genre);
+                            list.add(movie);
+                            break;
+                        case "Fantascienza":
+                            movie = new FilmFantascienza(movieName, movieLink, movieImageName, genre);
+                            list.add(movie);
+                            break;
+                        case "Commedia":
+                            movie = new FilmCommedia(movieName, movieLink, movieImageName, genre);
+                            list.add(movie);
+                            break;
+                        case "Horror":
+                            movie = new FilmHorror(movieName, movieLink, movieImageName, genre);
+                            list.add(movie);
+                            break;
+                        default:
+                            movie = null;
+                            break;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private JLabel createLabel(String text, int x, int y) {
         JLabel label = new JLabel(text);
         Font labelFont = label.getFont();
@@ -98,182 +137,76 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         return label;
     }
 
-    private void readMoviesFromFile(String fileName, ArrayList<Film> list) {
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] parts = line.split(","); // Split the line by comma
-                if (parts.length == 4) { // Assuming each line contains movie name, link, image name, and genre
-                    String movieName = parts[0];
-                    String movieLink = parts[1];
-                    String movieImageName = parts[2];
-                    String genre = parts[3];
+    private void createButtons(ArrayList<Film> movies, int startingX) {
+        int yOffsetAzione = 50;
+        int yOffsetDramma = 350;
+        int yOffsetFantascienza = 650;
+        int yOffsetCommedia = 950;
+        int yOffsetHorror = 1250;
 
-                    // Create the corresponding Film object based on the genre
-                    Film movie = new Film(movieName, movieLink, movieImageName, genre);
-                    list.add(movie);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+        int startingXAzione = 20;
+        int startingXDramma = 20;
+        int startingXFantascienza = 20;
+        int startingXACommedia = 20;
+        int startingXHorror = 20;
 
-    private void createButtons(List<Film> movies) {
-        // Track current label position
-        int currentX, currentY;
-
-        // Lists to keep track of buttons for each genre
-        List<JButton> azioneButtons = new ArrayList<>();
-        List<JButton> drammaButtons = new ArrayList<>();
-        List<JButton> fantascienzaButtons = new ArrayList<>();
-        List<JButton> commediaButtons = new ArrayList<>();
-        List<JButton> horrorButtons = new ArrayList<>();
+        int buttonWidth = 200;
+        int buttonHeight = 250;
 
         for (Film movie : movies) {
-            try {
-                BufferedImage img = ImageIO.read(getClass().getResource(movie.getImg_nome()));
-                Image dimg = img.getScaledInstance(200, 250, Image.SCALE_SMOOTH);
-                ImageIcon imageIcon = new ImageIcon(dimg);
-                JButton btn = new JButton(imageIcon);
-                btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-                btn.addActionListener(new ButtonClickListener(movie.getLink()));
+            JButton btn = createButton(movie);
+            // Place the button under the corresponding label based on the genre
+            if (movie instanceof FilmAzione) {
+                btn.setBounds(startingXAzione, yOffsetAzione, buttonWidth, buttonHeight);
+                startingXAzione += buttonWidth + 20; // Increase x-coordinate for next button
+            } else if (movie instanceof FilmDramma) {
+                btn.setBounds(startingXDramma, yOffsetDramma, buttonWidth, buttonHeight);
+                startingXDramma += buttonWidth + 20;
+            } else if (movie instanceof FilmFantascienza) {
+                btn.setBounds(startingXFantascienza, yOffsetFantascienza, buttonWidth, buttonHeight);
+                startingXFantascienza += buttonWidth + 20;
+            } else if (movie instanceof FilmCommedia) {
+                btn.setBounds(startingXACommedia, yOffsetCommedia, buttonWidth, buttonHeight);
+                startingXACommedia += buttonWidth + 20;
+            } else if (movie instanceof FilmHorror) {
+                btn.setBounds(startingXHorror, yOffsetHorror, buttonWidth, buttonHeight);
+                startingXHorror += buttonWidth + 20;
+            }
+            contentPane.add(btn);
+        }
+    }
 
-                // Determine the position based on the movie's genre
-                switch (movie.getGenre()) {
-                    case "Azione":
-                        azioneButtons.add(btn);
-                        break;
-                    case "Dramma":
-                        drammaButtons.add(btn);
-                        break;
-                    case "Fantascienza":
-                        fantascienzaButtons.add(btn);
-                        break;
-                    case "Commedia":
-                        commediaButtons.add(btn);
-                        break;
-                    case "Horror":
-                        horrorButtons.add(btn);
-                        break;
-                    default:
-                        // Default position if genre is not recognized
-                        break;
+
+    private JButton createButton(Film movie) {
+        try {
+            BufferedImage img = ImageIO.read(getClass().getResource(movie.getImg_nome()));
+            Image dimg = img.getScaledInstance(200, 250, Image.SCALE_SMOOTH);
+            ImageIcon imageIcon = new ImageIcon(dimg);
+            JButton btn = new JButton(imageIcon);
+            btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            btn.addActionListener(new ButtonClickListener(movie.getLink()));
+
+            btn.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    btn.setBorder(BorderFactory.createLineBorder(Color.WHITE, 3));
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    btn.setBorder(BorderFactory.createEmptyBorder()); // reset del border
+                }
+            });
+
+            return btn;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new JButton(); // Return a default button if image loading fails
         }
-
-        // Set initial position for buttons under each genre label
-        currentX = azione.getX();
-        currentY = azione.getY() + azione.getHeight() + 20;
-        for (JButton btn : azioneButtons) {
-            btn.setBounds(currentX, currentY, 200, 250);
-            contentPane.add(btn);
-            movieButtons.add(btn); // Add button to the list
-            currentX += 220; // Move to next position
-        }
-
-        currentX = dramma.getX();
-        currentY = dramma.getY() + dramma.getHeight() + 20;
-        for (JButton btn : drammaButtons) {
-            btn.setBounds(currentX, currentY, 200, 250);
-            contentPane.add(btn);
-            movieButtons.add(btn); // Add button to the list
-            currentX += 220; // Move to next position
-        }
-
-        currentX = fantascienza.getX();
-        currentY = fantascienza.getY() + fantascienza.getHeight() + 20;
-        for (JButton btn : fantascienzaButtons) {
-            btn.setBounds(currentX, currentY, 200, 250);
-            contentPane.add(btn);
-            movieButtons.add(btn); // Add button to the list
-            currentX += 220; // Move to next position
-        }
-
-        currentX = commedia.getX();
-        currentY = commedia.getY() + commedia.getHeight() + 20;
-        for (JButton btn : commediaButtons) {
-            btn.setBounds(currentX, currentY, 200, 250);
-            contentPane.add(btn);
-            movieButtons.add(btn); // Add button to the list
-            currentX += 220; // Move to next position
-        }
-
-        currentX = horror.getX();
-        currentY = horror.getY() + horror.getHeight() + 20;
-        for (JButton btn : horrorButtons) {
-            btn.setBounds(currentX, currentY, 200, 250);
-            contentPane.add(btn);
-            movieButtons.add(btn); // Add button to the list
-            currentX += 220; // Move to next position
-        }
-    }
-
-    private void searchMovies(String keyword) {
-        // Hide all movie buttons
-        for (JButton btn : movieButtons) {
-            btn.setVisible(false);
-        }
-
-        // Hide all genre labels
-        azione.setVisible(false);
-        dramma.setVisible(false);
-        fantascienza.setVisible(false);
-        commedia.setVisible(false);
-        horror.setVisible(false);
-
-        // Show search result label
-        searchResultLabel.setText("Risultati della ricerca per: " + keyword);
-        searchResultLabel.setVisible(true);
-
-        // Search for movies containing the keyword
-        ArrayList<Film> searchResults = new ArrayList<>();
-        for (Film movie : filmList) {
-            if (movie.getNome().toLowerCase().contains(keyword.toLowerCase())) {
-                searchResults.add(movie);
-            }
-        }
-
-        // Display search results
-        if (!searchResults.isEmpty()) {
-            createButtons(searchResults); // Create buttons for search results
-        } else {
-            searchResultLabel.setText("Nessun risultato trovato per: " + keyword);
-        }
-
-        // Show back button
-        backButton.setVisible(true);
-    }
-
-    private void goBack() {
-        // Show all movie buttons
-        for (JButton btn : movieButtons) {
-            btn.setVisible(true);
-        }
-
-        // Show all genre labels
-        azione.setVisible(true);
-        dramma.setVisible(true);
-        fantascienza.setVisible(true);
-        commedia.setVisible(true);
-        horror.setVisible(true);
-
-        // Hide search result label
-        searchResultLabel.setVisible(false);
-
-        // Hide back button
-        backButton.setVisible(false);
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == backButton) {
-            goBack();
-        }
-    }
+    public void actionPerformed(ActionEvent e) {}
 
     private class ButtonClickListener implements ActionListener {
         private String link;

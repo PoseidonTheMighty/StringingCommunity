@@ -1,4 +1,4 @@
-public class Film {
+public abstract class Film {
 
     String nome,link,img_nome,genre;
     boolean visuallizato;
