@@ -1,5 +1,7 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -11,12 +13,16 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
 
     JTextField t1;
     JButton b1;
+    JLabel goBackLabel, homeLabel; // Navigation bar labels
 
     private JLabel azioneLabel, drammaLabel, fantascienzaLabel, commediaLabel, horrorLabel, l1;
 
-    private JPanel contentPane, searchBarPanel;
+    private JPanel contentPane, searchBarPanel, navBarPanel; // Added navBarPanel
+
+    JMenuItem i1, i2, i3, i4, i5;
 
     ArrayList<Film> moviesList = new ArrayList<>(); // List for all movies
+    ArrayList<Film> searchResults = new ArrayList<>(); // List for search results
 
     public LoginSc(String titolo) {
         contentPane = new JPanel(null);
@@ -32,12 +38,29 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         t1.setForeground(Color.white);
         t1.setBackground(Color.black);
         t1.setBorder(BorderFactory.createLineBorder(Color.white)); // Add border
+        t1.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateSearchResults();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateSearchResults();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updateSearchResults();
+            }
+        });
 
         b1 = new JButton("Cerca");
         b1.setBounds(290, 0, 90, 30); // Adjusted position for search button
         b1.setFont(new Font("Gotham", Font.BOLD, 14));
         b1.setForeground(Color.black);
         b1.setBackground(Color.white);
+        b1.addActionListener(this); // Add ActionListener to search button
 
         searchBarPanel.add(t1);
         searchBarPanel.add(b1);
@@ -65,6 +88,21 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
 
         // Now that movies are added to the list, create buttons for each genre
         createButtons(moviesList, 20);
+
+        // Creating navigation bar panel
+        navBarPanel = new JPanel(null);
+        navBarPanel.setBounds(0, 0, 800, 50);
+        navBarPanel.setBackground(Color.black);
+
+        // Go Back Label
+        goBackLabel = createNavLabel("Go Back", 20);
+        navBarPanel.add(goBackLabel);
+
+        // Home Label
+        homeLabel = createNavLabel("Home", 100);
+        navBarPanel.add(homeLabel);
+
+        contentPane.add(navBarPanel);
 
         JScrollPane scrollPane = new JScrollPane(contentPane);
         scrollPane.setBounds(0, 0, 800, 600);
@@ -137,6 +175,37 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         return label;
     }
 
+    private JLabel createNavLabel(String text, int x) {
+        JLabel label = new JLabel(text);
+        Font labelFont = label.getFont();
+        label.setFont(new Font(labelFont.getName(), Font.PLAIN, 16));
+        label.setForeground(Color.white);
+        label.setBounds(x, 10, 80, 30);
+        label.setCursor(new Cursor(Cursor.HAND_CURSOR)); // Change cursor to hand when hovered
+        label.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // Handle click events for navigation labels (Go Back, Home)
+                if (text.equals("Go Back")) {
+                    // Implement go back functionality
+                } else if (text.equals("Home")) {
+                    showHomePage();
+                }
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                label.setForeground(Color.blue); // Change color on hover
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                label.setForeground(Color.white); // Change color back on exit
+            }
+        });
+        return label;
+    }
+
     private void createButtons(ArrayList<Film> movies, int startingX) {
         int yOffsetAzione = 50;
         int yOffsetDramma = 350;
@@ -176,7 +245,6 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         }
     }
 
-
     private JButton createButton(Film movie) {
         try {
             BufferedImage img = ImageIO.read(getClass().getResource(movie.getImg_nome()));
@@ -203,6 +271,55 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
             e.printStackTrace();
             return new JButton(); // Return a default button if image loading fails
         }
+    }
+
+    private void showHomePage() {
+        // Clear the content pane except for the navigation bar and search bar
+        contentPane.removeAll();
+        contentPane.add(navBarPanel);
+        contentPane.add(searchBarPanel);
+
+        // Recreate buttons for all movies
+        createButtons(moviesList, 20);
+
+        // Repaint the content pane to reflect changes
+        contentPane.revalidate();
+        contentPane.repaint();
+    }
+
+    private void updateSearchResults() {
+        String searchText = t1.getText().trim();
+        searchMovies(searchText);
+    }
+
+    private void searchMovies(String searchText) {
+        // Clear the search results
+        searchResults.clear();
+
+        if (searchText.isEmpty()) {
+            // If the search text is empty, display the home page
+            showHomePage();
+            return;
+        }
+
+        // Filter movies based on the search text
+        for (Film movie : moviesList) {
+            if (movie.getNome().toLowerCase().contains(searchText.toLowerCase())) {
+                searchResults.add(movie);
+            }
+        }
+
+        // Clear the content pane except for the navigation bar and search bar
+        contentPane.removeAll();
+        contentPane.add(navBarPanel);
+        contentPane.add(searchBarPanel);
+
+        // Create buttons for search results
+        createButtons(searchResults, 20);
+
+        // Repaint the content pane to reflect changes
+        contentPane.revalidate();
+        contentPane.repaint();
     }
 
     @Override
