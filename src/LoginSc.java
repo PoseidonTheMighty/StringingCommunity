@@ -245,33 +245,7 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         }
     }
 
-    private JButton createButton(Film movie) {
-        try {
-            BufferedImage img = ImageIO.read(getClass().getResource(movie.getImg_nome()));
-            Image dimg = img.getScaledInstance(200, 250, Image.SCALE_SMOOTH);
-            ImageIcon imageIcon = new ImageIcon(dimg);
-            JButton btn = new JButton(imageIcon);
-            btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            btn.addActionListener(new ButtonClickListener(movie.getLink()));
 
-            btn.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseEntered(MouseEvent e) {
-                    btn.setBorder(BorderFactory.createLineBorder(Color.WHITE, 3));
-                }
-
-                @Override
-                public void mouseExited(MouseEvent e) {
-                    btn.setBorder(BorderFactory.createEmptyBorder()); // reset del border
-                }
-            });
-
-            return btn;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new JButton(); // Return a default button if image loading fails
-        }
-    }
 
     private void showHomePage() {
         // Clear the content pane except for the navigation bar and search bar
@@ -321,6 +295,50 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         contentPane.revalidate();
         contentPane.repaint();
     }
+
+    private JButton createButton(Film movie) {
+        try {
+            BufferedImage img = ImageIO.read(getClass().getResource(movie.getImg_nome()));
+            Image dimg = img.getScaledInstance(200, 250, Image.SCALE_SMOOTH);
+            ImageIcon imageIcon = new ImageIcon(dimg);
+            JButton btn = new JButton(imageIcon);
+            btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+            // Aggiungi un listener per l'evento mouseEntered per ingrandire l'immagine e il bottone
+            btn.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    Image img = imageIcon.getImage();
+                    double width = img.getWidth(null) * 1.25;
+                    double height = img.getHeight(null) * 1.25;
+                    Image newImg = img.getScaledInstance((int) width, (int) height, Image.SCALE_SMOOTH);
+                    btn.setIcon(new ImageIcon(newImg));
+
+                    Dimension size = btn.getSize();
+                    size.width *= 1.25;
+                    size.height *= 1.25;
+                    btn.setSize(size);
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    btn.setIcon(imageIcon); // Ripristina l'immagine originale al mouseExited
+
+                    // Ripristina le dimensioni originali del bottone al mouseExited
+                    Image img = imageIcon.getImage();
+                    btn.setSize(img.getWidth(null), img.getHeight(null));
+                }
+            });
+
+            btn.addActionListener(new ButtonClickListener(movie.getLink()));
+
+            return btn;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new JButton(); // Ritorna un pulsante predefinito se il caricamento dell'immagine fallisce
+        }
+    }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {}
