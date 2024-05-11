@@ -8,11 +8,13 @@ import com.formdev.flatlaf.FlatLightLaf;
 import java.io.*;
 import java.net.URL;
 
-public class Schermata extends MioFrame implements ActionListener, WindowListener {
+public class Schermata extends MioFrame implements ActionListener, WindowListener, KeyListener {
 
     JTextField t1, t2;
     JButton b1, b2, b3;
     JLabel l1, l2, l3, l4;
+
+    public boolean enterPressed;
 
     public Schermata(String titolo) {
         setLayout(null);
@@ -138,10 +140,94 @@ public class Schermata extends MioFrame implements ActionListener, WindowListene
                 pf.setBounds(400, 200, 330, 250);
             }
         });
+
+        b1.addKeyListener(new KeyListener() {
+
+            public void ciao(int f){
+                if (f == KeyEvent.VK_ENTER){
+                    enterPressed = true;
+                }
+            }
+
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER){
+                    String uname = t1.getText().trim();
+                    String pwd = t2.getText().trim();
+
+                    if (uname.isEmpty() || pwd.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Stringing Community dice:\n       Non hai scritto nulla!", "Attenzione", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+
+                    boolean matched = false;
+
+                    try {
+                        FileReader fr = new FileReader("login.txt");
+                        BufferedReader br = new BufferedReader(fr);
+                        String line;
+                        while ((line = br.readLine()) != null) {
+                            if (line.equals(uname + "\t" + pwd)) {
+                                matched = true;
+                                break;
+                            }
+                        }
+                        fr.close();
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                    }
+
+                    if(t1.getText().contains("@gmail.com")) {
+                        if (matched) {
+                            dispose();
+                            LoginSc sc = new LoginSc("StringingCommunity");
+                            sc.setBounds(0, 0, 2000, 2000);
+                            sc.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                            sc.setVisible(true);
+                        } else {
+                            l2.setText("Invalid Username or Password");
+                            add(b3);
+                            revalidate();
+                            repaint();
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Non e' presente alcun indirizzo mail!!", "Errore", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+
+
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
 
     }
 }

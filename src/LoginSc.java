@@ -69,19 +69,19 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         contentPane.add(searchBarPanel);
 
         // Add your labels
-        azioneLabel = createLabel("Azione", 20, 20);
+        azioneLabel = createLabel("Azione", 20, 50);
         contentPane.add(azioneLabel);
 
-        drammaLabel = createLabel("Dramma", 20, 320);
+        drammaLabel = createLabel("Dramma", 20, 350);
         contentPane.add(drammaLabel);
 
-        fantascienzaLabel = createLabel("Fantascienza", 20, 620);
+        fantascienzaLabel = createLabel("Fantascienza", 20, 650);
         contentPane.add(fantascienzaLabel);
 
-        commediaLabel = createLabel("Commedia", 20, 920);
+        commediaLabel = createLabel("Commedia", 20, 950);
         contentPane.add(commediaLabel);
 
-        horrorLabel = createLabel("Horror", 20, 1220);
+        horrorLabel = createLabel("Horror", 20, 1250);
         contentPane.add(horrorLabel);
 
         readMoviesFromFile("Film.txt", moviesList); // Read movies from a single file
@@ -207,11 +207,11 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
     }
 
     private void createButtons(ArrayList<Film> movies, int startingX) {
-        int yOffsetAzione = 50;
-        int yOffsetDramma = 350;
-        int yOffsetFantascienza = 650;
-        int yOffsetCommedia = 950;
-        int yOffsetHorror = 1250;
+        int yOffsetAzione = 80;
+        int yOffsetDramma = 380;
+        int yOffsetFantascienza = 680;
+        int yOffsetCommedia = 980;
+        int yOffsetHorror = 1280;
 
         int startingXAzione = 20;
         int startingXDramma = 20;
