@@ -1,7 +1,5 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -12,7 +10,7 @@ import java.util.ArrayList;
 public class LoginSc extends MioFrame implements ActionListener, WindowListener {
 
     JTextField t1;
-    JButton b1;
+    JButton b1,loginButton;
     JLabel goBackLabel, homeLabel; // Navigation bar labels
 
     private JLabel azioneLabel, drammaLabel, fantascienzaLabel, commediaLabel, horrorLabel, l1;
@@ -30,7 +28,7 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         // Create search bar panel
         searchBarPanel = new JPanel(null);
         searchBarPanel.setBounds(1200, 20, 380, 50); // Adjusted position for search bar panel
-        searchBarPanel.setBackground(Color.black);
+
 
         t1 = new JTextField(60);
         t1.setBounds(0, 0, 270, 30);
@@ -38,22 +36,6 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         t1.setForeground(Color.white);
         t1.setBackground(Color.black);
         t1.setBorder(BorderFactory.createLineBorder(Color.white)); // Add border
-        t1.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                updateSearchResults();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                updateSearchResults();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                updateSearchResults();
-            }
-        });
 
         b1 = new JButton("Cerca");
         b1.setBounds(290, 0, 90, 30); // Adjusted position for search button
@@ -61,6 +43,22 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         b1.setForeground(Color.black);
         b1.setBackground(Color.white);
         b1.addActionListener(this); // Add ActionListener to search button
+
+        loginButton = new JButton("Login");
+        loginButton.setBounds(1700, 20, 90, 30); // Adjusted position for login button
+        loginButton.setFont(new Font("Gotham", Font.BOLD, 14));
+        loginButton.setForeground(Color.black);
+        loginButton.setBackground(Color.white);
+        // Add ActionListener to login button
+        loginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Schermata sc = new Schermata("Stringing Community");
+                sc.setBounds(0, 0, 350, 350);
+                sc.rendiVisibile(sc);
+            }
+        });
+        contentPane.add(loginButton);
 
         searchBarPanel.add(t1);
         searchBarPanel.add(b1);
@@ -92,7 +90,6 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         // Creating navigation bar panel
         navBarPanel = new JPanel(null);
         navBarPanel.setBounds(0, 0, 800, 50);
-        navBarPanel.setBackground(Color.black);
 
         // Go Back Label
         goBackLabel = createNavLabel("Go Back", 20);
@@ -219,31 +216,94 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         int startingXACommedia = 20;
         int startingXHorror = 20;
 
-        int buttonWidth = 200;
-        int buttonHeight = 250;
+        int labelWidth = 200;
+        int labelHeight = 250;
 
         for (Film movie : movies) {
-            JButton btn = createButton(movie);
-            // Place the button under the corresponding label based on the genre
+            JLabel label = createLabel(movie);
+            // Place the label under the corresponding label based on the genre
             if (movie instanceof FilmAzione) {
-                btn.setBounds(startingXAzione, yOffsetAzione, buttonWidth, buttonHeight);
-                startingXAzione += buttonWidth + 20; // Increase x-coordinate for next button
+                label.setBounds(startingXAzione, yOffsetAzione, labelWidth, labelHeight);
+                startingXAzione += labelWidth + 20; // Increase x-coordinate for next label
             } else if (movie instanceof FilmDramma) {
-                btn.setBounds(startingXDramma, yOffsetDramma, buttonWidth, buttonHeight);
-                startingXDramma += buttonWidth + 20;
+                label.setBounds(startingXDramma, yOffsetDramma, labelWidth, labelHeight);
+                startingXDramma += labelWidth + 20;
             } else if (movie instanceof FilmFantascienza) {
-                btn.setBounds(startingXFantascienza, yOffsetFantascienza, buttonWidth, buttonHeight);
-                startingXFantascienza += buttonWidth + 20;
+                label.setBounds(startingXFantascienza, yOffsetFantascienza, labelWidth, labelHeight);
+                startingXFantascienza += labelWidth + 20;
             } else if (movie instanceof FilmCommedia) {
-                btn.setBounds(startingXACommedia, yOffsetCommedia, buttonWidth, buttonHeight);
-                startingXACommedia += buttonWidth + 20;
+                label.setBounds(startingXACommedia, yOffsetCommedia, labelWidth, labelHeight);
+                startingXACommedia += labelWidth + 20;
             } else if (movie instanceof FilmHorror) {
-                btn.setBounds(startingXHorror, yOffsetHorror, buttonWidth, buttonHeight);
-                startingXHorror += buttonWidth + 20;
+                label.setBounds(startingXHorror, yOffsetHorror, labelWidth, labelHeight);
+                startingXHorror += labelWidth + 20;
             }
-            contentPane.add(btn);
+            contentPane.add(label);
         }
     }
+
+    private JLabel createLabel(Film movie) {
+        try {
+            BufferedImage img = ImageIO.read(getClass().getResource(movie.getImg_nome()));
+            Image dimg = img.getScaledInstance(200, 250, Image.SCALE_SMOOTH);
+            ImageIcon imageIcon = new ImageIcon(dimg);
+            JLabel label = new JLabel(imageIcon);
+            label.setLayout(new BorderLayout()); // Use BorderLayout to add components
+            label.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+            // Create a button and set its properties
+            JButton button = new JButton("Open");
+            button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    openLink(movie.getLink());
+                }
+            });
+
+            // Add a mouse listener to handle hover events
+            label.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    // Scale up the image and label size on mouse enter
+                    Image img = imageIcon.getImage();
+                    double width = img.getWidth(null) * 1.25;
+                    double height = img.getHeight(null) * 1.25;
+                    Image newImg = img.getScaledInstance((int) width, (int) height, Image.SCALE_SMOOTH);
+                    label.setIcon(new ImageIcon(newImg));
+
+                    // Add the button to the label and repaint
+                    label.add(button, BorderLayout.SOUTH);
+                    label.revalidate();
+                    label.repaint();
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    // Restore the original image and label size on mouse exit
+                    label.setIcon(imageIcon);
+
+                    // Remove the button from the label and repaint
+                    label.remove(button);
+                    label.revalidate();
+                    label.repaint();
+                }
+
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    // Prevent the default click action when the button is present
+                    if (e.getComponent().getComponentAt(e.getPoint()) != button) {
+                        openLink(movie.getLink());
+                    }
+                }
+            });
+
+            return label;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new JLabel(); // Return a default label if image loading fails
+        }
+    }
+
 
 
 
@@ -253,6 +313,13 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         contentPane.add(navBarPanel);
         contentPane.add(searchBarPanel);
 
+        // Add genre labels to the content pane
+        contentPane.add(azioneLabel);
+        contentPane.add(drammaLabel);
+        contentPane.add(fantascienzaLabel);
+        contentPane.add(commediaLabel);
+        contentPane.add(horrorLabel);
+
         // Recreate buttons for all movies
         createButtons(moviesList, 20);
 
@@ -261,24 +328,19 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         contentPane.repaint();
     }
 
-    private void updateSearchResults() {
-        String searchText = t1.getText().trim();
-        searchMovies(searchText);
-    }
-
     private void searchMovies(String searchText) {
         // Clear the search results
         searchResults.clear();
 
         if (searchText.isEmpty()) {
-            // If the search text is empty, display the home page
+            // If the search text is empty, display the original homepage
             showHomePage();
             return;
         }
 
         // Filter movies based on the search text
         for (Film movie : moviesList) {
-            if (movie.getNome().toLowerCase().contains(searchText.toLowerCase())) {
+            if (movie.getNome().toLowerCase().startsWith(searchText.toLowerCase())) {
                 searchResults.add(movie);
             }
         }
@@ -288,7 +350,7 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         contentPane.add(navBarPanel);
         contentPane.add(searchBarPanel);
 
-        // Create buttons for search results
+        // Create labels for search results
         createButtons(searchResults, 20);
 
         // Repaint the content pane to reflect changes
@@ -296,52 +358,22 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         contentPane.repaint();
     }
 
-    private JButton createButton(Film movie) {
+    private void openLink(String link) {
         try {
-            BufferedImage img = ImageIO.read(getClass().getResource(movie.getImg_nome()));
-            Image dimg = img.getScaledInstance(200, 250, Image.SCALE_SMOOTH);
-            ImageIcon imageIcon = new ImageIcon(dimg);
-            JButton btn = new JButton(imageIcon);
-            btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-            // Aggiungi un listener per l'evento mouseEntered per ingrandire l'immagine e il bottone
-            btn.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseEntered(MouseEvent e) {
-                    Image img = imageIcon.getImage();
-                    double width = img.getWidth(null) * 1.25;
-                    double height = img.getHeight(null) * 1.25;
-                    Image newImg = img.getScaledInstance((int) width, (int) height, Image.SCALE_SMOOTH);
-                    btn.setIcon(new ImageIcon(newImg));
-
-                    Dimension size = btn.getSize();
-                    size.width *= 1.25;
-                    size.height *= 1.25;
-                    btn.setSize(size);
-                }
-
-                @Override
-                public void mouseExited(MouseEvent e) {
-                    btn.setIcon(imageIcon); // Ripristina l'immagine originale al mouseExited
-
-                    // Ripristina le dimensioni originali del bottone al mouseExited
-                    Image img = imageIcon.getImage();
-                    btn.setSize(img.getWidth(null), img.getHeight(null));
-                }
-            });
-
-            btn.addActionListener(new ButtonClickListener(movie.getLink()));
-
-            return btn;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new JButton(); // Ritorna un pulsante predefinito se il caricamento dell'immagine fallisce
+            Desktop.getDesktop().browse(new URI(link));
+        } catch (IOException | URISyntaxException ex) {
+            ex.printStackTrace();
         }
     }
 
-
     @Override
-    public void actionPerformed(ActionEvent e) {}
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == b1) {
+            // Search button clicked
+            String searchText = t1.getText().trim();
+            searchMovies(searchText);
+        }
+    }
 
     private class ButtonClickListener implements ActionListener {
         private String link;

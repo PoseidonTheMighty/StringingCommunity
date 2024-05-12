@@ -12,8 +12,8 @@ public class Main {
 
         FlatMacDarkLaf.setup();
 
-        Schermata sc = new Schermata("Stringing Community");
-        sc.setBounds(400, 200, 330, 330);
+        LoginSc sc = new LoginSc("Stringing Community");
+        sc.setBounds(0, 0, 2000, 2000);
         sc.rendiVisibile(sc);
 
     }
