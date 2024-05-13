@@ -245,55 +245,40 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
     private JLabel createLabel(Film movie) {
         try {
             BufferedImage img = ImageIO.read(getClass().getResource(movie.getImg_nome()));
-            Image dimg = img.getScaledInstance(200, 250, Image.SCALE_SMOOTH);
-            ImageIcon imageIcon = new ImageIcon(dimg);
+
+            // Set the original size of the image to 200x250
+            Image scaledImg = img.getScaledInstance(200, 250, Image.SCALE_SMOOTH);
+            ImageIcon imageIcon = new ImageIcon(scaledImg);
+
             JLabel label = new JLabel(imageIcon);
-            label.setLayout(new BorderLayout()); // Use BorderLayout to add components
             label.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-            // Create a button and set its properties
-            JButton button = new JButton("Open");
-            button.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    openLink(movie.getLink());
-                }
-            });
+            // Store the original size of the image
+            int originalWidth = 200;
+            int originalHeight = 250;
 
-            // Add a mouse listener to handle hover events
             label.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseEntered(MouseEvent e) {
-                    // Scale up the image and label size on mouse enter
-                    Image img = imageIcon.getImage();
-                    double width = img.getWidth(null) * 1.25;
-                    double height = img.getHeight(null) * 1.25;
-                    Image newImg = img.getScaledInstance((int) width, (int) height, Image.SCALE_SMOOTH);
+                    // Scale up the image by 1.1 (or any factor you prefer)
+                    int newWidth = (int) (originalWidth * 1.1);
+                    int newHeight = (int) (originalHeight * 1.1);
+                    Image newImg = img.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
                     label.setIcon(new ImageIcon(newImg));
-
-                    // Add the button to the label and repaint
-                    label.add(button, BorderLayout.SOUTH);
-                    label.revalidate();
-                    label.repaint();
+                    label.setSize(newWidth, newHeight);
                 }
 
                 @Override
                 public void mouseExited(MouseEvent e) {
-                    // Restore the original image and label size on mouse exit
+                    // Restore the original size of the image (200x250)
                     label.setIcon(imageIcon);
-
-                    // Remove the button from the label and repaint
-                    label.remove(button);
-                    label.revalidate();
-                    label.repaint();
+                    label.setSize(originalWidth, originalHeight);
                 }
 
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    // Prevent the default click action when the button is present
-                    if (e.getComponent().getComponentAt(e.getPoint()) != button) {
-                        openLink(movie.getLink());
-                    }
+                    // Open the link when clicked
+                    openLink(movie.getLink());
                 }
             });
 
@@ -303,9 +288,6 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
             return new JLabel(); // Return a default label if image loading fails
         }
     }
-
-
-
 
     private void showHomePage() {
         // Clear the content pane except for the navigation bar and search bar
