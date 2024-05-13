@@ -266,7 +266,7 @@ public class Anteprima extends MioFrame implements ActionListener, WindowListene
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (temp == isUserLoggedIn()) {
+                    if (sc != null && isUserLoggedIn()) {
                         openLink(movie.getLink());
                     } else {
                         JOptionPane.showMessageDialog(Anteprima.this, "Devi eseguire il login per accedere al film.", "Avviso", JOptionPane.WARNING_MESSAGE);
@@ -304,32 +304,29 @@ public class Anteprima extends MioFrame implements ActionListener, WindowListene
 
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    // Prevent the default click action when the button is present
-                    if (e.getComponent().getComponentAt(e.getPoint()) != button) {
-                        openLink(movie.getLink());
+                    if (sc != null && isUserLoggedIn()) {
+                        if (e.getComponent().getComponentAt(e.getPoint()) != button) {
+                            openLink(movie.getLink());
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(Anteprima.this, "Devi eseguire il login per accedere al film.", "Avviso", JOptionPane.WARNING_MESSAGE);
                     }
                 }
             });
 
-        return label;
-    } catch (IOException e) {
-        e.printStackTrace();
-        return new JLabel(); // Return a default label if image loading fails
+            return label;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new JLabel(); // Return a default label if image loading fails
+        }
     }
-}
 
     private boolean isUserLoggedIn() {
-        if (sc.isLogin()) {
-            temp = true;
+        if (sc != null && sc.isLogin()) {
             return true;
         }
-
         return false;
     }
-
-
-
-
 
     private void showHomePage() {
         // Clear the content pane except for the navigation bar and search bar
@@ -398,6 +395,4 @@ public class Anteprima extends MioFrame implements ActionListener, WindowListene
             searchMovies(searchText);
         }
     }
-
-
 }

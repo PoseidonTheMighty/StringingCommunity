@@ -12,9 +12,9 @@ public class Main {
 
         FlatMacDarkLaf.setup();
 
-        LoginSc sc = new LoginSc("Stringing Community");
-        sc.setBounds(0, 0, 2000, 2000);
-        sc.rendiVisibile(sc);
+        Anteprima an = new Anteprima("Stringing Community");
+        an.setBounds(0, 0, 2000, 2000);
+        an.rendiVisibile(an);
 
     }
 }
