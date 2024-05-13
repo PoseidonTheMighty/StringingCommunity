@@ -13,6 +13,15 @@ public class Schermata extends MioFrame implements ActionListener, WindowListene
     JTextField t1, t2;
     JButton b1, b2, b3;
     JLabel l1, l2, l3, l4;
+    private boolean login = false;
+
+    public boolean isLogin() {
+        return login;
+    }
+
+    public void setLogin(boolean login) {
+        this.login = login;
+    }
 
     public boolean enterPressed;
 
@@ -105,6 +114,7 @@ public class Schermata extends MioFrame implements ActionListener, WindowListene
                 if(t1.getText().contains("@gmail.com")) {
                     if (matched) {
                         dispose();
+                        login = true;
                         LoginSc sc = new LoginSc("StringingCommunity");
                         sc.setBounds(0, 0, 2000, 2000);
                         sc.setExtendedState(JFrame.MAXIMIZED_BOTH);
