@@ -13,6 +13,8 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
     JButton b1, loginButton;
     JLabel goBackLabel, homeLabel; // Navigation bar labels
 
+    Schermata sc;
+
     private JLabel azioneLabel, drammaLabel, fantascienzaLabel, commediaLabel, horrorLabel, l1;
 
     private JPanel contentPane, searchBarPanel, navBarPanel; // Added navBarPanel
@@ -53,7 +55,7 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Schermata sc = new Schermata("Stringing Community");
+                sc = new Schermata("Stringing Community");
                 sc.setBounds(0, 0, 350, 350);
                 sc.rendiVisibile(sc);
             }
@@ -271,7 +273,11 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    openLink(movie.getLink());
+                    if (sc != null && isUserLoggedIn()) {
+                        openLink(movie.getLink());
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Devi eseguire il login per accedere al film.", "Avviso", JOptionPane.WARNING_MESSAGE);
+                    }
                 }
             });
 
@@ -322,6 +328,15 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
             e.printStackTrace();
             return new JPanel(); // Return a default panel if image loading fails
         }
+    }
+
+    private boolean isUserLoggedIn() {
+        if (sc != null && sc.isLogin()) {
+            sc.setLogin(true);
+            return true;
+        }
+        sc.setLogin(false);
+        return false;
     }
 
     private void showHomePage() {
