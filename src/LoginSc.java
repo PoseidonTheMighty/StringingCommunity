@@ -264,6 +264,9 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
             int originalHeight = 250;
 
             JButton button = new JButton("Open"); // Declare the button variable here
+            button.setFont(new Font("Gotham", Font.BOLD, 14));
+            button.setForeground(Color.black);
+            button.setBackground(Color.white);
             button.setVisible(false); // Initially hide the button
             button.addActionListener(new ActionListener() {
                 @Override
@@ -307,6 +310,7 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
                 public void mouseExited(MouseEvent e) {
                     // Hide the button when the mouse exits it
                     button.setVisible(false);
+
                 }
             });
 
@@ -321,10 +325,11 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
     }
 
     private void showHomePage() {
-        // Clear the content pane except for the navigation bar and search bar
+        // Clear the content pane except for the navigation bar, search bar, and login button
         contentPane.removeAll();
         contentPane.add(navBarPanel);
         contentPane.add(searchBarPanel);
+        contentPane.add(loginButton); // Ensure the login button is added back
 
         // Add genre labels to the content pane
         contentPane.add(azioneLabel);
@@ -340,6 +345,7 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         contentPane.revalidate();
         contentPane.repaint();
     }
+
 
     private void searchMovies(String searchText) {
         // Clear the search results
@@ -359,10 +365,11 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
             }
         }
 
-        // Clear the content pane except for the navigation bar and search bar
+        // Clear the content pane except for the navigation bar, search bar, and login button
         contentPane.removeAll();
         contentPane.add(navBarPanel);
         contentPane.add(searchBarPanel);
+        contentPane.add(loginButton); // Ensure the login button is added back
 
         // Create labels for search results
         createButtons(searchResults, 20, contentPane);
@@ -373,6 +380,7 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
     }
 
 
+
     private void openLink(String link) {
         try {
             Desktop.getDesktop().browse(new URI(link));
@@ -380,6 +388,7 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
             ex.printStackTrace();
         }
     }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -389,6 +398,7 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
             searchMovies(searchText);
         }
     }
+
 
     private class ButtonClickListener implements ActionListener {
         private String link;
