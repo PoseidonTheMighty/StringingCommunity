@@ -12,7 +12,7 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
     JTextField t1;
     JButton b1, loginButton;
     JLabel goBackLabel, homeLabel; // Navigation bar labels
-
+    private boolean loggedIn = false; // Variable to track login status
     Schermata sc;
 
     private JLabel azioneLabel, drammaLabel, fantascienzaLabel, commediaLabel, horrorLabel, l1;
@@ -55,11 +55,13 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                sc = new Schermata("Stringing Community");
-                sc.setBounds(0, 0, 350, 350);
-                sc.rendiVisibile(sc);
+                    sc = new Schermata("Stringing Community");
+                    sc.setBounds(0, 0, 350, 350);
+                    sc.rendiVisibile(sc);
+                    dispose();
             }
         });
+
         contentPane.add(loginButton);
 
         searchBarPanel.add(t1);
@@ -88,6 +90,11 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
 
         // Now that movies are added to the list, create buttons for each genre
         createButtons(moviesList, 20);
+
+        readLoginStatusFromFile();
+
+        // Update UI based on login status
+        updateUIBasedOnLoginStatus();
 
         // Creating navigation bar panel
         navBarPanel = new JPanel(null);
@@ -119,6 +126,78 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         setLocationRelativeTo(null);
         setResizable(true);
         setVisible(true);
+    }
+
+    private void readLoginStatusFromFile() {
+        try (BufferedReader br = new BufferedReader(new FileReader("login.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split("\t");
+                if (parts.length >= 3 && parts[2].equals("1")) {
+                    loggedIn = true;
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    private void updateUIBasedOnLoginStatus() {
+        if (loggedIn) {
+            // If logged in, change the login button to a profile button
+            loginButton.setText("Profile");
+            loginButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // Handle profile button click
+                    // For example, show user profile information
+                }
+            });
+        }
+    }
+
+    private void keepUserLoggedIn() {
+        if (loggedIn) {
+            // If the user is logged in, update the login status to keep them logged in
+            try {
+                File inputFile = new File("login.txt");
+                File tempFile = new File("temp.txt");
+
+                BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+                BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    String[] parts = line.split("\t");
+                    if (parts.length >= 3 && parts[2].equals("1")) {
+                        // Update login status to keep user logged in
+                        writer.write(parts[0] + "\t" + parts[1] + "\t" + "1");
+                    } else {
+                        writer.write(line);
+                    }
+                    writer.newLine();
+                }
+
+                reader.close();
+                writer.close();
+
+                // Rename temp file to the original file
+                inputFile.delete();
+                tempFile.renameTo(inputFile);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        // Override windowClosing to keep user logged in when the app is closed
+        keepUserLoggedIn();
+        super.windowClosing(e);
     }
 
     private void readMoviesFromFile(String fileName, ArrayList<Film> list) {
@@ -273,7 +352,7 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (sc != null && isUserLoggedIn()) {
+                    if (loggedIn) {
                         openLink(movie.getLink());
                     } else {
                         JOptionPane.showMessageDialog(null, "Devi eseguire il login per accedere al film.", "Avviso", JOptionPane.WARNING_MESSAGE);

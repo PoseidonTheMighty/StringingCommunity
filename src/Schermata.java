@@ -99,19 +99,28 @@ public class Schermata extends MioFrame implements ActionListener, WindowListene
                 try {
                     FileReader fr = new FileReader("login.txt");
                     BufferedReader br = new BufferedReader(fr);
+                    StringBuilder fileContent = new StringBuilder();
                     String line;
                     while ((line = br.readLine()) != null) {
-                        if (line.equals(uname + "\t" + pwd)) {
+                        if (line.equals(uname + "\t" + pwd + "\t0")) { // Check if login is successful
                             matched = true;
-                            break;
+                            fileContent.append(uname).append("\t").append(pwd).append("\t1").append("\n"); // Change "0" to "1"
+                        } else {
+                            fileContent.append(line).append("\n"); // Keep the line unchanged
                         }
                     }
                     fr.close();
+
+                    // Write back to the file
+                    FileWriter fw = new FileWriter("login.txt");
+                    BufferedWriter bw = new BufferedWriter(fw);
+                    bw.write(fileContent.toString());
+                    bw.close();
                 } catch (Exception exception) {
                     exception.printStackTrace();
                 }
 
-                if(t1.getText().contains("@gmail.com")) {
+                if (t1.getText().contains("@gmail.com")) {
                     if (matched) {
                         dispose();
                         login = true;
@@ -128,9 +137,9 @@ public class Schermata extends MioFrame implements ActionListener, WindowListene
                 } else {
                     JOptionPane.showMessageDialog(null, "Non e' presente alcun indirizzo mail!!", "Errore", JOptionPane.ERROR_MESSAGE);
                 }
-
             }
         });
+
 
         b2.addActionListener(new ActionListener() {
             @Override

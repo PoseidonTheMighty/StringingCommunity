@@ -50,7 +50,7 @@ public class SignUp extends MioFrame implements ActionListener,WindowListener{
         b1.setBackground(Color.white);
         b1.setBounds(105, 160, 100, 33);
 
-        b1.addActionListener((new ActionListener() {
+        b1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String uname = t1.getText().trim();
@@ -63,19 +63,21 @@ public class SignUp extends MioFrame implements ActionListener,WindowListener{
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "Non e' presente alcun indirizzo mail!!", "Errore", JOptionPane.ERROR_MESSAGE);
-
+                    return;
                 }
 
                 try {
                     FileWriter fw = new FileWriter("login.txt", true);
-                    fw.write(t1.getText()+"\t"+t2.getText()+"\n");
+                    fw.write(t1.getText()+"\t"+t2.getText()+"\t0\n"); // Appending "0" to indicate not logged in
                     fw.close();
                     JFrame f = new JFrame();
                     JOptionPane.showMessageDialog(f, "Registration Completed");
                     dispose();
-                }catch(Exception exception){}
+                }catch(Exception exception){
+                    exception.printStackTrace();
+                }
             }
-        }));
+        });
 
         try {
             BufferedImage img = ImageIO.read(getClass().getResource("logo.png")); // Change this to your image file path

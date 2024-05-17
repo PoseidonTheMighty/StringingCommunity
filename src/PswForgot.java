@@ -69,14 +69,14 @@ public class PswForgot extends MioFrame implements ActionListener {
         String email = t1.getText().trim();
         String newPassword = t2.getText().trim();
 
-        if(t1.getText().contains("@gmail.com")) {
+        if (t1.getText().contains("@gmail.com")) {
             if (email.isEmpty() || newPassword.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Stringing Community dice:\n       Non hai scritto nulla!", "Stringing Community", JOptionPane.WARNING_MESSAGE);
                 return;
             }
         } else {
             JOptionPane.showMessageDialog(null, "Non e' presente alcun indirizzo mail!!", "Errore", JOptionPane.ERROR_MESSAGE);
-
+            return;
         }
 
         try {
@@ -93,10 +93,9 @@ public class PswForgot extends MioFrame implements ActionListener {
                     String[] parts = line.split("\t");
                     if (parts.length >= 2 && parts[1].equals(newPassword)) {
                         JOptionPane.showMessageDialog(null, "La nuova password non può essere uguale alla vecchia", "Error", JOptionPane.ERROR_MESSAGE);
-                        writer.write(line);
-                        this.setVisible(false);
+                        writer.write(line); // Keep the line unchanged
                     } else {
-                        writer.write(email + "\t" + newPassword);
+                        writer.write(email + "\t" + newPassword + "\t0\n"); // Add "0" to indicate not logged in
                     }
                     writer.newLine();
                     found = true;
@@ -112,16 +111,15 @@ public class PswForgot extends MioFrame implements ActionListener {
             if (!found) {
                 JOptionPane.showMessageDialog(null, "Mail non trovata", "Error", JOptionPane.ERROR_MESSAGE);
                 tempFile.delete();
-            } else if (found) {
+            } else {
                 inputFile.delete();
                 tempFile.renameTo(inputFile);
                 JOptionPane.showMessageDialog(null, "Password aggiornata", "Success", JOptionPane.INFORMATION_MESSAGE);
                 this.setVisible(false);
             }
-
-
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-    }// per pushare ciao Imraj
-}
+    }
+
+}// per pushare ciao Imraj
