@@ -18,3 +18,16 @@ The Wolf of Wall Street,https://streamingcommunity.foo/watch/159,The Wolf of Wal
 La maledizione della Queen Mary,https://streamingcommunity.foo/watch/6812,La maledizione della Queen Mary.jpeg,Horror
 IT,https://streamingcommunity.foo/watch/1123,IT.jpg,Horror
 IT Capitolo 2,https://streamingcommunity.foo/watch/10,IT Capitolo 2.jpg,Horror
+Il regno del pianeta delle scimmie, https://streamingcommunity.foo/watch/7976, rps.jpg, Azione
+Sanctum, https://streamingcommunity.foo/watch/8501, sanctum.jpg, Dramma
+Challengers, https://streamingcommunity.foo/watch/7696, challengers.jpg, Dramma
+The Garfield Movie, https://streamingcommunity.foo/watch/8322, tgm.jpg, Commedia
+Back to Black, https://streamingcommunity.foo/watch/8226, btb.jpg, Dramma
+Divergent, https://streamingcommunity.foo/watch/738, divergent.jpg, Azione
+Venom: La Furia di Carnage, https://streamingcommunity.foo/watch/3249, Venom2.jpg, Azione
+The Plane, https://streamingcommunity.foo/watch/6093, plane.jpg, Azione
+Man in Black 3, https://streamingcommunity.foo/watch/328, mib.jpg, Azione
+X-Men: Conflitto finale, https://streamingcommunity.foo/watch/353, xmencofi.jpg, Azione
+Fast & Furious: Solo parti originali, https://streamingcommunity.foo/watch/178, f&f4.jpg, Azione
+Uno Splendido Disastro 2, https://streamingcommunity.foo/watch/8495, sd2.jpg, Dramma
+Fast & Furious 7, https://streamingcommunity.foo/watch/137, f&f7.jpg, Azione
