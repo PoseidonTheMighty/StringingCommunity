@@ -48,3 +48,13 @@ The family plan,https://streamingcommunity.foo/watch/7124,family.jpg,Commedia
 Le vie del Signore sono finite,https://streamingcommunity.foo/watch/7197,signore.jpg,Commedia
 Famosi in 7 giorni,https://streamingcommunity.foo/watch/3952,famosi.jpg,Commedia
 Minions 2,https://streamingcommunity.foo/watch/1867,minions2.jpg,Commedia
+Upside Down,https://streamingcommunity.foo/watch/2083,ud.jpg,Fantascienza
+Transformers,https://streamingcommunity.foo/watch/383,trans.jpg,Fantascienza
+Underworld-Evolution,https://streamingcommunity.foo/watch/1184,underworld.jpg,Fantascienza
+Chronicle,https://streamingcommunity.foo/watch/3863,ch.jpg,Fantascienza
+Codice Genesi,https://streamingcommunity.foo/watch/2330,codice.jpg,Fantascienza
+Non siamo soli,https://streamingcommunity.foo/watch/2330,nss.jpg,Fantascienza
+Proximity,https://streamingcommunity.foo/watch/2016,proximity.jpg,Fantascienza
+La Fine,https://streamingcommunity.foo/watch/1265,fine.jpg,Fantascienza
+The day after tomorrow,https://streamingcommunity.foo/watch/7764,tdat.jpg,Fantascienza
+Ritorno al futuro,https://streamingcommunity.foo/watch/472,backfuture.jpg,Fantascienza
