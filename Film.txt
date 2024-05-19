@@ -58,3 +58,11 @@ Proximity,https://streamingcommunity.foo/watch/2016,proximity.jpg,Fantascienza
 La Fine,https://streamingcommunity.foo/watch/1265,fine.jpg,Fantascienza
 The day after tomorrow,https://streamingcommunity.foo/watch/7764,tdat.jpg,Fantascienza
 Ritorno al futuro,https://streamingcommunity.foo/watch/472,backfuture.jpg,Fantascienza
+The Ring,https://streamingcommunity.foo/watch/2815,ring.jpg,Horror
+Il terrore del silenzio,https://streamingcommunity.foo/watch/2012,terrore1.jpg,Horror
+HollyBlood,https://streamingcommunity.foo/watch/5503,hb.jpg,Horror
+L'esorcista,https://streamingcommunity.foo/watch/6753,exo.jpg,Horror
+Death Valley,https://streamingcommunity.foo/watch/6089,dv.jpg,Horror
+Wrong Turn,https://streamingcommunity.foo/watch/2817,wt.jpg,Horror
+Scream,https://streamingcommunity.foo/watch/2929,scream.jpg,Horror
+Come True,https://streamingcommunity.foo/watch/3520,ct.jpg,Horror
