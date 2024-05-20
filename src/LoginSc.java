@@ -84,7 +84,7 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
             }
         });
 
-
+        readLoginStatusFromFile();
 
         contentPane.add(loginButton);
 
@@ -94,11 +94,10 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         // Add search bar panel to contentPane
         contentPane.add(searchBarPanel);
 
-        vistiLabel = createLabel("Visti Recentemente", 70, 100);
+        vistiLabel = createLabel("Visti Recentemente", 70, 300);
         contentPane.add(vistiLabel);
 
-        consigliatiLabel = createLabel("Consigliati", 70, 440);
-        contentPane.add(consigliatiLabel);
+        showWatchedMovies();
 
         // Add your labels
         azioneLabel = createLabel("Azione", 70, 780);
@@ -124,7 +123,6 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         // Add action listener to the search button
         b1.addActionListener(e -> searchMovies(t1.getText()));
 
-        readLoginStatusFromFile();
         // Update UI based on login status
         updateUIBasedOnLoginStatus();
 
@@ -170,7 +168,7 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
             }
         });
 
-// Action listener for Dramma genre label
+        // Action listener for Dramma genre label
         drammaNavLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -178,7 +176,7 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
             }
         });
 
-// Action listener for Fantascienza genre label
+        // Action listener for Fantascienza genre label
         fantascienzaNavLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -186,7 +184,7 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
             }
         });
 
-// Action listener for Commedia genre label
+        // Action listener for Commedia genre label
         commediaNavLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -194,7 +192,7 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
             }
         });
 
-// Action listener for Horror genre label
+        // Action listener for Horror genre label
         horrorNavLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -209,7 +207,6 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
             }
         });
 
-
         contentPane.add(navBarPanel);
 
         scrollPane = new JScrollPane(contentPane);
@@ -221,7 +218,6 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
         add(scrollPane);
-
         showWatchedMovies();
 
         initializeMovieIndex();
@@ -265,7 +261,7 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
                 int labelHeight = 300;
                 int maxFilmsPerRow = 8; // Maximum number of films per row
                 int xOffset = 20;
-                int yOffset = 135; // Adjusted yOffset to start below the vistiLabel
+                int yOffset = 400; // Adjusted yOffset to start below the vistiLabel
                 int startingX = 70;
                 int currentX = startingX;
                 int currentY = yOffset;
@@ -307,7 +303,6 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         // Execute the SwingWorker
         worker.execute();
     }
-
 
     private void showWatchLaterMovies() {
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
@@ -506,8 +501,6 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         // Execute the SwingWorker
         worker.execute();
     }
-
-
 
     private void setNavbarLabelsEnabled(boolean enabled) {
         azioneNavLabel.setEnabled(enabled);
@@ -943,20 +936,26 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
             actionButton.setForeground(Color.black);
             actionButton.setBackground(Color.white);
             actionButton.setVisible(false);
+            actionButton.setEnabled(loggedIn); // Disable button if not logged in
+
             actionButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (showRemoveButton) {
-                        // Remove movie from Watch Later
-                        removeMovieFromWatchLater(movie.getNome());
-                        // Reload the Watch Later movies
-                        showWatchLaterMovies();
-                    } else {
-                        // Add movie to Watch Later only if it's not already added
-                        if (!isMovieInWatchLater(movie.getNome())) {
-                            addMovieToWatchLater(movie.getNome());
-                            JOptionPane.showMessageDialog(null, "Film Aggiunto a Watch Later", "Info", JOptionPane.WARNING_MESSAGE);
+                    if (loggedIn) {
+                        if (showRemoveButton) {
+                            // Remove movie from Watch Later
+                            removeMovieFromWatchLater(movie.getNome());
+                            // Reload the Watch Later movies
+                            showWatchLaterMovies();
+                        } else {
+                            // Add movie to Watch Later only if it's not already added
+                            if (!isMovieInWatchLater(movie.getNome())) {
+                                addMovieToWatchLater(movie.getNome());
+                                JOptionPane.showMessageDialog(null, "Film Aggiunto a Watch Later", "Info", JOptionPane.WARNING_MESSAGE);
+                            }
                         }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Devi eseguire il login per eseguire questa azione.", "Avviso", JOptionPane.WARNING_MESSAGE);
                     }
                 }
             });
@@ -966,6 +965,7 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
             openButton.setForeground(Color.black);
             openButton.setBackground(Color.white);
             openButton.setVisible(false);
+
             openButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -1052,6 +1052,7 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
             return new JPanel(); // Return a default panel if image loading fails
         }
     }
+
 
     private void writeMovieToUserFile(String fileName, String movieName) {
         try {
@@ -1220,10 +1221,6 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         // Execute the SwingWorker
         worker.execute();
     }
-
-
-
-
 
     private void openLink(String link) {
         try {
