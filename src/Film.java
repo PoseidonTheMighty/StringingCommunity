@@ -1,7 +1,7 @@
 public abstract class Film {
 
     String nome,link,img_nome,genre;
-    boolean visuallizato;
+    boolean visuallizato,guarda_dopo;
 
     public String getGenre() {
         return genre;

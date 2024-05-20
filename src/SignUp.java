@@ -70,14 +70,28 @@ public class SignUp extends MioFrame implements ActionListener,WindowListener{
                     FileWriter fw = new FileWriter("login.txt", true);
                     fw.write(t1.getText()+"\t"+t2.getText()+"\t0\n"); // Appending "0" to indicate not logged in
                     fw.close();
+
+                    // Create a text file with the name before "@" in the email used for registration
+                    String[] parts = uname.split("@");
+                    String fileName = parts[0] + ".txt";
+                    File userFile = new File(fileName);
+                    if (userFile.createNewFile()) {
+                        System.out.println("File created: " + userFile.getName());
+                    } else {
+                        System.out.println("File already exists.");
+                    }
+
                     JFrame f = new JFrame();
                     JOptionPane.showMessageDialog(f, "Registration Completed");
                     dispose();
-                }catch(Exception exception){
+                } catch (IOException exception) {
                     exception.printStackTrace();
                 }
             }
         });
+
+
+
 
         try {
             BufferedImage img = ImageIO.read(getClass().getResource("logo.png")); // Change this to your image file path

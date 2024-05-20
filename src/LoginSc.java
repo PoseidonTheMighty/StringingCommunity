@@ -11,11 +11,16 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
 
     JTextField t1;
     JButton b1, loginButton;
-    JLabel goBackLabel, homeLabel; // Navigation bar labels
+
+    JLabel homeLabel,azioneNavLabel, drammaNavLabel, fantascienzaNavLabel, commediaNavLabel, horrorNavLabel, watchLaterLabel; // Genre labels in the navbar
     private boolean loggedIn = false; // Variable to track login status
     Schermata sc;
 
-    private JLabel azioneLabel, drammaLabel, fantascienzaLabel, commediaLabel, horrorLabel, l1;
+    String username;
+
+    JScrollPane scrollPane;
+
+    private JLabel consigliatiLabel,vistiLabel,azioneLabel, drammaLabel, fantascienzaLabel, commediaLabel, horrorLabel, l1;
 
     private JPanel contentPane, searchBarPanel, navBarPanel; // Added navBarPanel
 
@@ -24,13 +29,14 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
     ArrayList<Film> moviesList = new ArrayList<>(); // List for all movies
     ArrayList<Film> searchResults = new ArrayList<>(); // List for search results
 
+    ArrayList<JPanel> moviePanels = new ArrayList<>();
+
     public LoginSc(String titolo) {
         contentPane = new JPanel(null);
 
         // Create search bar panel
         searchBarPanel = new JPanel(null);
         searchBarPanel.setBounds(1200, 20, 380, 50); // Adjusted position for search bar panel
-
 
         t1 = new JTextField(60);
         t1.setBounds(0, 0, 270, 30);
@@ -55,10 +61,10 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                    sc = new Schermata("Stringing Community");
-                    sc.setBounds(0, 0, 350, 350);
-                    sc.rendiVisibile(sc);
-                    dispose();
+                sc = new Schermata("Stringing Community");
+                sc.setBounds(0, 0, 350, 350);
+                sc.rendiVisibile(sc);
+                dispose();
             }
         });
 
@@ -70,55 +76,133 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         // Add search bar panel to contentPane
         contentPane.add(searchBarPanel);
 
+        vistiLabel = createLabel("Visti Recentemente", 70, 100);
+        contentPane.add(vistiLabel);
+
+        consigliatiLabel = createLabel("Consigliati", 70, 440);
+        contentPane.add(consigliatiLabel);
+
         // Add your labels
-        azioneLabel = createLabel("Azione", 20, 50);
+        azioneLabel = createLabel("Azione", 70, 780);
         contentPane.add(azioneLabel);
 
-        drammaLabel = createLabel("Dramma", 20, 350);
+        drammaLabel = createLabel("Dramma", 70, 1120);
         contentPane.add(drammaLabel);
 
-        fantascienzaLabel = createLabel("Fantascienza", 20, 650);
+        fantascienzaLabel = createLabel("Fantascienza", 70, 1460);
         contentPane.add(fantascienzaLabel);
 
-        commediaLabel = createLabel("Commedia", 20, 950);
+        commediaLabel = createLabel("Commedia", 70, 1800);
         contentPane.add(commediaLabel);
 
-        horrorLabel = createLabel("Horror", 20, 1250);
+        horrorLabel = createLabel("Horror", 70, 2140);
         contentPane.add(horrorLabel);
 
         readMoviesFromFile("Film.txt", moviesList); // Read movies from a single file
 
         // Now that movies are added to the list, create buttons for each genre
-        createButtons(moviesList, 20);
+        createButtons(moviesList, 70);
 
         readLoginStatusFromFile();
 
         // Update UI based on login status
         updateUIBasedOnLoginStatus();
 
-        // Creating navigation bar panel
-        navBarPanel = new JPanel(null);
-        navBarPanel.setBounds(0, 0, 800, 50);
-
-        // Go Back Label
-        goBackLabel = createNavLabel("Go Back", 20);
-        navBarPanel.add(goBackLabel);
+        // Creating navigation bar panel with GridLayout for equal spacing
+        navBarPanel = new JPanel(new GridLayout(1, 7, 20, 0));
+        navBarPanel.setBounds(45, 13, 800, 50);
 
         // Home Label
-        homeLabel = createNavLabel("Home", 100);
+        homeLabel = createNavLabel("Home");
         navBarPanel.add(homeLabel);
+
+        // Add genre JLabels to navigation bar
+        azioneNavLabel = createNavLabel("Azione");
+        navBarPanel.add(azioneNavLabel);
+
+        drammaNavLabel = createNavLabel("Dramma");
+        navBarPanel.add(drammaNavLabel);
+
+        fantascienzaNavLabel = createNavLabel("Fantascienza");
+        navBarPanel.add(fantascienzaNavLabel);
+
+        commediaNavLabel = createNavLabel("Commedia");
+        navBarPanel.add(commediaNavLabel);
+
+        horrorNavLabel = createNavLabel("Horror");
+        navBarPanel.add(horrorNavLabel);
+
+        watchLaterLabel = createNavLabel("Watch Later");
+        navBarPanel.add(watchLaterLabel);
+
+        homeLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                showHomePage();
+            }
+        });
+
+        // Action listener for Azione genre label
+        azioneNavLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                showMoviesByGenre("Azione");
+            }
+        });
+
+// Action listener for Dramma genre label
+        drammaNavLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                showMoviesByGenre("Dramma");
+            }
+        });
+
+// Action listener for Fantascienza genre label
+        fantascienzaNavLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                showMoviesByGenre("Fantascienza");
+            }
+        });
+
+// Action listener for Commedia genre label
+        commediaNavLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                showMoviesByGenre("Commedia");
+            }
+        });
+
+// Action listener for Horror genre label
+        horrorNavLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                showMoviesByGenre("Horror");
+            }
+        });
+
+        watchLaterLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                showWatchLaterMovies();
+            }
+        });
+
 
         contentPane.add(navBarPanel);
 
-        JScrollPane scrollPane = new JScrollPane(contentPane);
+        scrollPane = new JScrollPane(contentPane);
         scrollPane.setBounds(0, 0, 800, 600);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
-        contentPane.setPreferredSize(new Dimension(1600, 1600)); // Adjust preferred size
+        contentPane.setPreferredSize(new Dimension(2000, 2500)); // Adjust preferred size
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
         add(scrollPane);
+
+        showWatchedMovies();
 
         setTitle(titolo);
         setSize(800, 600);
@@ -128,6 +212,251 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         setVisible(true);
     }
 
+    private void showWatchedMovies() {
+        SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                java.util.List<String> lines = new ArrayList<>();
+
+                // Read movies from the file associated with the username
+                try (BufferedReader br = new BufferedReader(new FileReader(username + ".txt"))) {
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        lines.add(line);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                int movieCount = 0; // Track the number of movies added
+                int labelWidth = 200;
+                int labelHeight = 300;
+                int maxFilmsPerRow = 8; // Maximum number of films per row
+                int xOffset = 20;
+                int yOffset = 135; // Adjusted yOffset to start below the vistiLabel
+                int startingX = 70;
+                int currentX = startingX;
+                int currentY = yOffset;
+
+                // Iterate over the lines in reverse order
+                for (int i = lines.size() - 1; i >= 0; i--) {
+                    String[] parts = lines.get(i).split(",");
+                    if (parts.length >= 2 && parts[1].trim().equals("1")) {
+                        // Find the movie by name from the moviesList
+                        String movieName = parts[0].trim();
+                        for (Film movie : moviesList) {
+                            if (movie.getNome().equals(movieName)) {
+                                JPanel moviePanel = createPanel(movie, false); // Don't show remove button for Watched
+                                moviePanel.setBounds(currentX, currentY, labelWidth, labelHeight);
+                                contentPane.add(moviePanel);
+                                movieCount++;
+                                // Adjust coordinates for the next panel
+                                currentX += labelWidth + xOffset;
+                                if (movieCount % maxFilmsPerRow == 0) {
+                                    // Move to the next row
+                                    currentX = startingX;
+                                    currentY += labelHeight + xOffset;
+                                }
+                                // Print the movie as it is added
+                                System.out.println("Added to Watched: " + movie.getNome());
+                            }
+                        }
+                    }
+                }
+
+                // Repaint the content pane to reflect changes
+                contentPane.revalidate();
+                contentPane.repaint();
+
+                return null;
+            }
+        };
+
+        // Execute the SwingWorker
+        worker.execute();
+    }
+
+    private Film findMovieByName(String movieName) {
+        // Search for the movie in the moviesList
+        for (Film movie : moviesList) {
+            if (movie.getNome().equals(movieName)) {
+                return movie;
+            }
+        }
+        return null; // Movie not found
+    }
+
+    private void showWatchLaterMovies() {
+        SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                // Clear the content pane except for the navigation bar, search bar, and login button
+                contentPane.removeAll();
+                contentPane.add(navBarPanel);
+                contentPane.add(searchBarPanel);
+                contentPane.add(loginButton); // Ensure the login button is added back
+
+                // Read movies from the file associated with the username
+                try (BufferedReader br = new BufferedReader(new FileReader(username + ".txt"))) {
+                    String line;
+                    int movieCount = 0; // Track the number of movies added
+                    int labelWidth = 200;
+                    int labelHeight = 300;
+                    int maxFilmsPerRow = 8; // Maximum number of films per row
+                    int xOffset = 20;
+                    int yOffset = 80;
+                    int currentX = 20;
+                    int currentY = 80;
+
+                    while ((line = br.readLine()) != null) {
+                        String[] parts = line.split(",");
+                        if (parts.length >= 2 && parts[1].trim().equals("true")) {
+                            // Find the movie by name from the moviesList
+                            String movieName = parts[0].trim();
+                            for (Film movie : moviesList) {
+                                if (movie.getNome().equals(movieName)) {
+                                    JPanel moviePanel = createPanel(movie, true); // Show remove button for Watch Later
+                                    moviePanel.setBounds(currentX, currentY, labelWidth, labelHeight);
+                                    contentPane.add(moviePanel);
+                                    movieCount++;
+                                    // Adjust coordinates for the next panel
+                                    currentX += labelWidth + xOffset;
+                                    if (movieCount % maxFilmsPerRow == 0) {
+                                        // Move to the next row
+                                        currentX = 20;
+                                        currentY += labelHeight + xOffset;
+                                    }
+                                    // Print the movie as it is added
+                                    System.out.println("Added to Watch Later: " + movie.getNome());
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                // Repaint the content pane to reflect changes
+                contentPane.revalidate();
+                contentPane.repaint();
+
+                return null;
+            }
+        };
+
+        // Execute the SwingWorker
+        worker.execute();
+    }
+
+    private void removeMovieFromWatchLater(String movieName) {
+        try {
+            File inputFile = new File(username + ".txt");
+            File tempFile = new File("temp.txt");
+
+            BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 2 && parts[0].trim().equals(movieName)) {
+                    // Set the flag to false to mark the movie as removed from Watch Later
+                    writer.write(parts[0] + ",false\n");
+                } else {
+                    writer.write(line);
+                }
+                writer.newLine();
+            }
+
+            reader.close();
+            writer.close();
+
+            // Rename temp file to the original file
+            inputFile.delete();
+            tempFile.renameTo(inputFile);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void showMoviesByGenre(String genre) {
+        // Disable the navbar labels to prevent concurrent clicks
+        setNavbarLabelsEnabled(false);
+
+        SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                // Filter movies based on the genre
+                ArrayList<Film> genreMovies = new ArrayList<>();
+                for (Film movie : moviesList) {
+                    if (movie.getGenre().equals(genre)) {
+                        genreMovies.add(movie);
+                    }
+                }
+
+                // Clear the content pane except for the navigation bar, search bar, and login button
+                contentPane.removeAll();
+                contentPane.add(navBarPanel);
+                contentPane.add(searchBarPanel);
+                contentPane.add(loginButton);
+
+                // Calculate dimensions for movie panels
+                int labelWidth = 200;
+                int labelHeight = 300; // Adjusted height to accommodate button
+                int maxFilmsPerRow = 8; // Maximum number of films per row
+                int xOffset = 20;
+                int yOffset = 80;
+
+                // Add panels for each movie to the content pane
+                int row = 0;
+                int col = 0;
+                for (Film movie : genreMovies) {
+                    JPanel moviePanel = createPanel(movie,false);
+                    int x = 20 + col * (labelWidth + xOffset);
+                    int y = yOffset + row * (labelHeight + xOffset);
+                    moviePanel.setBounds(x, y, labelWidth, labelHeight);
+                    contentPane.add(moviePanel);
+
+                    col++;
+                    if (col >= maxFilmsPerRow) {
+                        // Move to the next row
+                        col = 0;
+                        row++;
+                    }
+                }
+
+                // Adjust content pane dimensions to fit all movies
+                int contentWidth = 20 + maxFilmsPerRow * (labelWidth + xOffset);
+                int contentHeight = yOffset + (row + 1) * (labelHeight + xOffset);
+                contentPane.setPreferredSize(new Dimension(contentWidth, contentHeight));
+
+                // Repaint the content pane to reflect changes
+                contentPane.revalidate();
+                contentPane.repaint();
+
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                // Re-enable the navbar labels after processing is finished
+                setNavbarLabelsEnabled(true);
+            }
+        };
+
+        // Execute the SwingWorker
+        worker.execute();
+    }
+
+    private void setNavbarLabelsEnabled(boolean enabled) {
+        azioneNavLabel.setEnabled(enabled);
+        drammaNavLabel.setEnabled(enabled);
+        fantascienzaNavLabel.setEnabled(enabled);
+        commediaNavLabel.setEnabled(enabled);
+        horrorNavLabel.setEnabled(enabled);
+    }
+
     private void readLoginStatusFromFile() {
         try (BufferedReader br = new BufferedReader(new FileReader("login.txt"))) {
             String line;
@@ -135,6 +464,14 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
                 String[] parts = line.split("\t");
                 if (parts.length >= 3 && parts[2].equals("1")) {
                     loggedIn = true;
+                    // Extract username from email
+                    String email = parts[0];
+                    int atIndex = email.indexOf('@');
+                    if (atIndex != -1) {
+                        username = email.substring(0, atIndex);
+                        // Print the username
+                        System.out.println("Username: " + username);
+                    }
                     break;
                 }
             }
@@ -142,8 +479,6 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
             e.printStackTrace();
         }
     }
-
-
 
     private void updateUIBasedOnLoginStatus() {
         if (loggedIn) {
@@ -249,38 +584,33 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         JLabel label = new JLabel(text);
         Font labelFont = label.getFont();
         label.setFont(new Font(labelFont.getName(), Font.BOLD, 25));
-        label.setBounds(x, y, 200, 20);
+        label.setBounds(x, y, 400, 32);
         return label;
     }
 
-    private JLabel createNavLabel(String text, int x) {
+    private JLabel createNavLabel(String text) {
         JLabel label = new JLabel(text);
-        Font labelFont = label.getFont();
-        label.setFont(new Font(labelFont.getName(), Font.PLAIN, 16));
+        label.setFont(new Font("Gotham", Font.BOLD, 14)); // Decrease font size to fit the label
         label.setForeground(Color.white);
-        label.setBounds(x, 10, 80, 30);
-        label.setCursor(new Cursor(Cursor.HAND_CURSOR)); // Change cursor to hand when hovered
+        label.setHorizontalAlignment(SwingConstants.CENTER); // Center align text
+
+        // Add MouseListener to handle hover effect
         label.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                // Handle click events for navigation labels (Go Back, Home)
-                if (text.equals("Go Back")) {
-                    // Implement go back functionality
-                } else if (text.equals("Home")) {
-                    showHomePage();
-                }
-            }
-
-            @Override
             public void mouseEntered(MouseEvent e) {
-                label.setForeground(Color.blue); // Change color on hover
+                label.setCursor(new Cursor(Cursor.HAND_CURSOR)); // Change cursor to hand
+                label.setBackground(Color.black); // Change background color to black
+                label.setOpaque(true); // Make the background color visible
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                label.setForeground(Color.white); // Change color back on exit
+                label.setCursor(new Cursor(Cursor.DEFAULT_CURSOR)); // Change cursor to default
+                label.setBackground(null); // Reset background color
+                label.setOpaque(false); // Remove background color
             }
         });
+
         return label;
     }
 
@@ -289,45 +619,68 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
     }
 
     private void createButtons(ArrayList<Film> movies, int startingX, JPanel panel) {
-        int yOffsetAzione = 80;
-        int yOffsetDramma = 380;
-        int yOffsetFantascienza = 680;
-        int yOffsetCommedia = 980;
-        int yOffsetHorror = 1280;
+        int yOffsetAzione = 810;
+        int yOffsetDramma = 1150;
+        int yOffsetFantascienza = 1490;
+        int yOffsetCommedia = 1830;
+        int yOffsetHorror = 2170;
 
-        int startingXAzione = 20;
-        int startingXDramma = 20;
-        int startingXFantascienza = 20;
-        int startingXACommedia = 20;
-        int startingXHorror = 20;
+        int startingXAzione = 70;
+        int startingXDramma = 70;
+        int startingXFantascienza = 70;
+        int startingXACommedia = 70;
+        int startingXHorror = 70;
 
         int labelWidth = 200;
-        int labelHeight = 250;
+        int labelHeight = 300;
+        int maxFilmsPerRow = 8; // Maximum number of films per row
+
+        int azioneCount = 0;
+        int drammaCount = 0;
+        int fantascienzaCount = 0;
+        int commediaCount = 0;
+        int horrorCount = 0;
 
         for (Film movie : movies) {
-            JPanel moviePanel = createPanel(movie); // Create a panel for each movie
-            // Place the panel under the corresponding label based on the genre
+            JPanel moviePanel = createPanel(movie,false); // Create a panel for each movie
+
             if (movie instanceof FilmAzione) {
-                moviePanel.setBounds(startingXAzione, yOffsetAzione, labelWidth, labelHeight);
-                startingXAzione += labelWidth + 20; // Increase x-coordinate for next panel
+                if (azioneCount < maxFilmsPerRow) {
+                    moviePanel.setBounds(startingXAzione, yOffsetAzione, labelWidth, labelHeight);
+                    startingXAzione += labelWidth + 20; // Increase x-coordinate for next panel
+                    azioneCount++;
+                }
             } else if (movie instanceof FilmDramma) {
-                moviePanel.setBounds(startingXDramma, yOffsetDramma, labelWidth, labelHeight);
-                startingXDramma += labelWidth + 20;
+                if (drammaCount < maxFilmsPerRow) {
+                    moviePanel.setBounds(startingXDramma, yOffsetDramma, labelWidth, labelHeight);
+                    startingXDramma += labelWidth + 20;
+                    drammaCount++;
+                }
             } else if (movie instanceof FilmFantascienza) {
-                moviePanel.setBounds(startingXFantascienza, yOffsetFantascienza, labelWidth, labelHeight);
-                startingXFantascienza += labelWidth + 20;
+                if (fantascienzaCount < maxFilmsPerRow) {
+                    moviePanel.setBounds(startingXFantascienza, yOffsetFantascienza, labelWidth, labelHeight);
+                    startingXFantascienza += labelWidth + 20;
+                    fantascienzaCount++;
+                }
             } else if (movie instanceof FilmCommedia) {
-                moviePanel.setBounds(startingXACommedia, yOffsetCommedia, labelWidth, labelHeight);
-                startingXACommedia += labelWidth + 20;
+                if (commediaCount < maxFilmsPerRow) {
+                    moviePanel.setBounds(startingXACommedia, yOffsetCommedia, labelWidth, labelHeight);
+                    startingXACommedia += labelWidth + 20;
+                    commediaCount++;
+                }
             } else if (movie instanceof FilmHorror) {
-                moviePanel.setBounds(startingXHorror, yOffsetHorror, labelWidth, labelHeight);
-                startingXHorror += labelWidth + 20;
+                if (horrorCount < maxFilmsPerRow) {
+                    moviePanel.setBounds(startingXHorror, yOffsetHorror, labelWidth, labelHeight);
+                    startingXHorror += labelWidth + 20;
+                    horrorCount++;
+                }
             }
             panel.add(moviePanel);
+            moviePanels.add(moviePanel); // Add movie panel to the list
         }
     }
 
-    private JPanel createPanel(Film movie) {
+    private JPanel createPanel(Film movie, boolean showRemoveButton) {
         try {
             BufferedImage img = ImageIO.read(getClass().getResource(movie.getImg_nome()));
 
@@ -335,77 +688,168 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
             Image scaledImg = img.getScaledInstance(200, 250, Image.SCALE_SMOOTH);
             ImageIcon imageIcon = new ImageIcon(scaledImg);
 
+            // Pre-scale the hover image by 1.1 times
+            int hoverWidth = (int) (200 * 1.1);
+            int hoverHeight = (int) (250 * 1.1);
+            Image hoverImg = img.getScaledInstance(hoverWidth, hoverHeight, Image.SCALE_SMOOTH);
+            ImageIcon hoverIcon = new ImageIcon(hoverImg);
+
             JPanel panel = new JPanel(new BorderLayout());
+            panel.setPreferredSize(new Dimension(200, 300));
 
             JLabel label = new JLabel(imageIcon);
             label.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-            // Store the original size of the image
-            int originalWidth = 200;
-            int originalHeight = 250;
+            JPanel buttonPanel = new JPanel(new GridLayout(1, 2));
 
-            JButton button = new JButton("Open"); // Declare the button variable here
-            button.setFont(new Font("Gotham", Font.BOLD, 14));
-            button.setForeground(Color.black);
-            button.setBackground(Color.white);
-            button.setVisible(false); // Initially hide the button
-            button.addActionListener(new ActionListener() {
+            JButton actionButton = new JButton(showRemoveButton ? "Remove" : "Add");
+            actionButton.setFont(new Font("Gotham", Font.BOLD, 14));
+            actionButton.setForeground(Color.black);
+            actionButton.setBackground(Color.white);
+            actionButton.setVisible(false);
+            actionButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (showRemoveButton) {
+                        // Remove movie from Watch Later
+                        removeMovieFromWatchLater(movie.getNome());
+                        // Reload the Watch Later movies
+                        showWatchLaterMovies();
+                    } else {
+                        // Add movie to Watch Later only if it's not already added
+                        if (!isMovieInWatchLater(movie.getNome())) {
+                            addMovieToWatchLater(movie.getNome());
+                            JOptionPane.showMessageDialog(null, "Film Aggiunto a Watch Later", "Info", JOptionPane.WARNING_MESSAGE);
+                        }
+                    }
+                }
+            });
+
+            JButton openButton = new JButton("Open");
+            openButton.setFont(new Font("Gotham", Font.BOLD, 14));
+            openButton.setForeground(Color.black);
+            openButton.setBackground(Color.white);
+            openButton.setVisible(false);
+            openButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (loggedIn) {
                         openLink(movie.getLink());
+                        // Write movie name and "1" to user's file
+                        writeMovieToUserFile(username + ".txt", movie.getNome());
                     } else {
                         JOptionPane.showMessageDialog(null, "Devi eseguire il login per accedere al film.", "Avviso", JOptionPane.WARNING_MESSAGE);
                     }
                 }
             });
 
+            buttonPanel.add(actionButton);
+            buttonPanel.add(openButton);
+
+            Timer hoverTimer = new Timer(100, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    label.setIcon(imageIcon);
+                    label.setSize(200, 250);
+                    actionButton.setVisible(false);
+                    openButton.setVisible(false);
+                    panel.setPreferredSize(new Dimension(200, 300));
+                    panel.revalidate();
+                    panel.repaint();
+                }
+            });
+            hoverTimer.setRepeats(false);
+
             label.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseEntered(MouseEvent e) {
-                    // Show the button when the mouse enters the label
-                    button.setVisible(true);
-                    // Scale up the image by 1.1 (or any factor you prefer)
-                    int newWidth = (int) (originalWidth * 1.1);
-                    int newHeight = (int) (originalHeight * 1.1);
-                    Image newImg = img.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
-                    label.setIcon(new ImageIcon(newImg));
-                    label.setSize(newWidth, newHeight);
+                    hoverTimer.stop();
+                    label.setIcon(hoverIcon);
+                    label.setSize(hoverWidth, hoverHeight);
+                    actionButton.setVisible(true);
+                    openButton.setVisible(true);
+                    panel.setPreferredSize(new Dimension(hoverWidth, hoverHeight + 50));
+                    panel.revalidate();
+                    panel.repaint();
                 }
 
                 @Override
                 public void mouseExited(MouseEvent e) {
-                    // Hide the button when the mouse exits the label
-                    button.setVisible(false);
-                    // Restore the original size of the image (200x250)
-                    label.setIcon(imageIcon);
-                    label.setSize(originalWidth, originalHeight);
+                    hoverTimer.restart();
                 }
             });
 
-            button.addMouseListener(new MouseAdapter() {
+            actionButton.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseEntered(MouseEvent e) {
-                    // Keep the button visible when the mouse enters it
-                    button.setVisible(true);
-                    button.setCursor(new Cursor(Cursor.HAND_CURSOR)); // Change cursor to hand when hovered
+                    actionButton.setVisible(true);
+                    actionButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                    hoverTimer.stop();
                 }
 
                 @Override
                 public void mouseExited(MouseEvent e) {
-                    // Hide the button when the mouse exits it
-                    button.setVisible(false);
+                    hoverTimer.restart();
+                }
+            });
 
+            openButton.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    openButton.setVisible(true);
+                    openButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                    hoverTimer.stop();
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    hoverTimer.restart();
                 }
             });
 
             panel.add(label, BorderLayout.CENTER);
-            panel.add(button, BorderLayout.SOUTH); // Add the button to the panel's SOUTH position initially
+            panel.add(buttonPanel, BorderLayout.SOUTH);
 
             return panel;
         } catch (IOException e) {
             e.printStackTrace();
             return new JPanel(); // Return a default panel if image loading fails
+        }
+    }
+
+    private void writeMovieToUserFile(String fileName, String movieName) {
+        try {
+            FileWriter writer = new FileWriter(fileName, true); // Append mode
+            writer.write(movieName + ",1\n"); // Write movie name and "1" with a comma between them
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean isMovieInWatchLater(String movieName) {
+        try (BufferedReader br = new BufferedReader(new FileReader(username + ".txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 2 && parts[0].trim().equals(movieName) && parts[1].trim().equals("true")) {
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private void addMovieToWatchLater(String movieName) {
+        // Write movie name and "true" to a file associated with the username
+        if (loggedIn) {
+            try (FileWriter writer = new FileWriter(username + ".txt", true)) {
+                writer.write(movieName + ",true\n");
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
@@ -432,48 +876,90 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         contentPane.add(commediaLabel);
         contentPane.add(horrorLabel);
 
-        // Recreate buttons for all movies
-        createButtons(moviesList, 20);
+        // Add vistiLabel and consigliatiLabel to the content pane
+        contentPane.add(vistiLabel);
+        contentPane.add(consigliatiLabel);
+
+        showWatchedMovies();
+
+        // Add movie panels back to the content pane
+        for (JPanel moviePanel : moviePanels) {
+            contentPane.add(moviePanel);
+        }
+
+        // Set the preferred size of the content pane to match the dimensions in the LoginSc method
+        contentPane.setPreferredSize(new Dimension(1600, 2500));
+
+        // Update the viewport of the scroll pane
+        scrollPane.setViewportView(contentPane);
 
         // Repaint the content pane to reflect changes
         contentPane.revalidate();
         contentPane.repaint();
     }
-
 
     private void searchMovies(String searchText) {
-        // Clear the search results
-        searchResults.clear();
+        SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                // Clear the search results
+                searchResults.clear();
 
-        if (searchText.isEmpty()) {
-            // If the search text is empty, display the original homepage
-            showHomePage();
-            return;
-        }
+                if (searchText.isEmpty()) {
+                    // If the search text is empty, display the original homepage
+                    showHomePage();
+                    return null;
+                }
 
-        // Filter movies based on the search text
-        for (Film movie : moviesList) {
-            String[] movieNameWords = movie.getNome().toLowerCase().split("\\s+");
-            if (movieNameWords.length > 0 && movieNameWords[0].startsWith(searchText.toLowerCase())) {
-                searchResults.add(movie);
+                // Filter movies based on the search text
+                for (Film movie : moviesList) {
+                    String[] movieNameWords = movie.getNome().toLowerCase().split("\\s+");
+                    if (movieNameWords.length > 0 && movieNameWords[0].startsWith(searchText.toLowerCase())) {
+                        searchResults.add(movie);
+                    }
+                }
+
+                // Clear the content pane except for the navigation bar, search bar, and login button
+                contentPane.removeAll();
+                contentPane.add(navBarPanel);
+                contentPane.add(searchBarPanel);
+                contentPane.add(loginButton); // Ensure the login button is added back
+
+                // Set starting coordinates for search results
+                int startingX = 20;
+                int startingY = 80;
+                int labelWidth = 200;
+                int labelHeight = 250;
+                int maxFilmsPerRow = 8; // Maximum number of films per row
+                int xOffset = 20;
+
+                int currentX = startingX;
+                int currentY = startingY;
+
+                for (Film movie : searchResults) {
+                    JPanel moviePanel = createPanel(movie,false); // Create a panel for each movie
+                    moviePanel.setBounds(currentX, currentY, labelWidth, labelHeight);
+
+                    currentX += labelWidth + xOffset;
+                    if ((currentX + labelWidth + xOffset) > contentPane.getWidth()) {
+                        currentX = startingX;
+                        currentY += labelHeight + xOffset;
+                    }
+
+                    contentPane.add(moviePanel);
+                }
+
+                // Repaint the content pane to reflect changes
+                contentPane.revalidate();
+                contentPane.repaint();
+
+                return null;
             }
-        }
+        };
 
-        // Clear the content pane except for the navigation bar, search bar, and login button
-        contentPane.removeAll();
-        contentPane.add(navBarPanel);
-        contentPane.add(searchBarPanel);
-        contentPane.add(loginButton); // Ensure the login button is added back
-
-        // Create labels for search results
-        createButtons(searchResults, 20, contentPane);
-
-        // Repaint the content pane to reflect changes
-        contentPane.revalidate();
-        contentPane.repaint();
+        // Execute the SwingWorker
+        worker.execute();
     }
-
-
 
     private void openLink(String link) {
         try {
@@ -483,7 +969,6 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         }
     }
 
-
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == b1) {
@@ -492,7 +977,6 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
             searchMovies(searchText);
         }
     }
-
 
     private class ButtonClickListener implements ActionListener {
         private String link;
