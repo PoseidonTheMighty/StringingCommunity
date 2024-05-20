@@ -1,7 +1,9 @@
+import java.awt.image.BufferedImage;
+
 public abstract class Film {
 
-    String nome,link,img_nome,genre;
-    boolean visuallizato;
+    String nome,link,genre;
+    boolean visuallizato,guarda_dopo;
 
     public String getGenre() {
         return genre;
@@ -11,7 +13,7 @@ public abstract class Film {
         this.genre = genre;
     }
 
-    public Film(String nome, String link, String img_nome, String genre) {
+    public Film(String nome, String link, BufferedImage img_nome, String genre) {
         this.nome = nome;
         this.link = link;
         this.img_nome = img_nome;

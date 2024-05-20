@@ -3,10 +3,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.ArrayList;
 
 public class PswForgot extends MioFrame implements ActionListener {
     JTextField t1, t2;
@@ -89,13 +87,13 @@ public class PswForgot extends MioFrame implements ActionListener {
             String line;
             boolean found = false;
             while ((line = reader.readLine()) != null) {
-                if (line.startsWith(email + "\t")) {
-                    String[] parts = line.split("\t");
+                if (line.startsWith(email + " ")) {
+                    String[] parts = line.split(" ");
                     if (parts.length >= 2 && parts[1].equals(newPassword)) {
                         JOptionPane.showMessageDialog(null, "La nuova password non può essere uguale alla vecchia", "Error", JOptionPane.ERROR_MESSAGE);
                         writer.write(line); // Keep the line unchanged
                     } else {
-                        writer.write(email + "\t" + newPassword + "\t0\n"); // Add "0" to indicate not logged in
+                        writer.write(email + " " + newPassword + " 0\n"); // Add "0" to indicate not logged in
                     }
                     writer.newLine();
                     found = true;
