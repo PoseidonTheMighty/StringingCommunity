@@ -4,9 +4,7 @@ import java.awt.event.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowListener;
-import com.formdev.flatlaf.FlatLightLaf;
 import java.io.*;
-import java.net.URL;
 
 public class Schermata extends MioFrame implements ActionListener, WindowListener, KeyListener {
 

@@ -5,13 +5,11 @@ import java.awt.event.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowListener;
-import com.formdev.flatlaf.FlatLightLaf;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 
 public class Anteprima extends MioFrame implements ActionListener, WindowListener{
