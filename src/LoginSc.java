@@ -1,16 +1,23 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class LoginSc extends MioFrame implements ActionListener, WindowListener {
 
-    JTextField t1;
-    JButton b1, loginButton;
+    JTextField t1,t2,t3;
+    JButton b1, loginButton,profileButton;
 
     JLabel homeLabel,azioneNavLabel, drammaNavLabel, fantascienzaNavLabel, commediaNavLabel, horrorNavLabel, watchLaterLabel; // Genre labels in the navbar
     private boolean loggedIn = false; // Variable to track login status
@@ -24,12 +31,21 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
 
     private JPanel contentPane, searchBarPanel, navBarPanel; // Added navBarPanel
 
-    JMenuItem i1, i2, i3, i4, i5;
-
     ArrayList<Film> moviesList = new ArrayList<>(); // List for all movies
     ArrayList<Film> searchResults = new ArrayList<>(); // List for search results
 
     ArrayList<JPanel> moviePanels = new ArrayList<>();
+
+    private Map<String, Set<Film>> movieIndex = new HashMap<>(); // Index for faster search with Set to avoid duplicates
+
+    // HashMap to index movies by genre
+    // Define lists to cache movies by genre
+    private List<Film> azioneMovies = new ArrayList<>();
+    private List<Film> drammaMovies = new ArrayList<>();
+    private List<Film> fantascienzaMovies = new ArrayList<>();
+    private List<Film> commediaMovies = new ArrayList<>();
+    private List<Film> horrorMovies = new ArrayList<>();
+
 
     public LoginSc(String titolo) {
         contentPane = new JPanel(null);
@@ -68,6 +84,8 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
             }
         });
 
+
+
         contentPane.add(loginButton);
 
         searchBarPanel.add(t1);
@@ -103,8 +121,10 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         // Now that movies are added to the list, create buttons for each genre
         createButtons(moviesList, 70);
 
-        readLoginStatusFromFile();
+        // Add action listener to the search button
+        b1.addActionListener(e -> searchMovies(t1.getText()));
 
+        readLoginStatusFromFile();
         // Update UI based on login status
         updateUIBasedOnLoginStatus();
 
@@ -204,6 +224,8 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
 
         showWatchedMovies();
 
+        initializeMovieIndex();
+
         setTitle(titolo);
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -218,13 +240,23 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
             protected Void doInBackground() throws Exception {
                 java.util.List<String> lines = new ArrayList<>();
 
+                // Construct the file path
+                File file = new File(username + ".txt");
+
+                // Check if the file exists before attempting to read it
+                if (!file.exists()) {
+                    System.err.println("File not found: " + file.getAbsolutePath());
+                    return null;
+                }
+
                 // Read movies from the file associated with the username
-                try (BufferedReader br = new BufferedReader(new FileReader(username + ".txt"))) {
+                try (BufferedReader br = new BufferedReader(new FileReader(file))) {
                     String line;
                     while ((line = br.readLine()) != null) {
                         lines.add(line);
                     }
                 } catch (IOException e) {
+                    System.err.println("Error reading file: " + file.getAbsolutePath());
                     e.printStackTrace();
                 }
 
@@ -276,15 +308,6 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         worker.execute();
     }
 
-    private Film findMovieByName(String movieName) {
-        // Search for the movie in the moviesList
-        for (Film movie : moviesList) {
-            if (movie.getNome().equals(movieName)) {
-                return movie;
-            }
-        }
-        return null; // Movie not found
-    }
 
     private void showWatchLaterMovies() {
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
@@ -387,19 +410,42 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {
-                // Filter movies based on the genre
-                ArrayList<Film> genreMovies = new ArrayList<>();
-                for (Film movie : moviesList) {
-                    if (movie.getGenre().equals(genre)) {
-                        genreMovies.add(movie);
-                    }
-                }
-
                 // Clear the content pane except for the navigation bar, search bar, and login button
                 contentPane.removeAll();
                 contentPane.add(navBarPanel);
                 contentPane.add(searchBarPanel);
                 contentPane.add(loginButton);
+
+                // Define the list of movies to be displayed based on the selected genre
+                List<Film> genreMovies = new ArrayList<>();
+                switch (genre) {
+                    case "Azione":
+                        genreMovies.addAll(azioneMovies);
+                        break;
+                    case "Dramma":
+                        genreMovies.addAll(drammaMovies);
+                        break;
+                    case "Fantascienza":
+                        genreMovies.addAll(fantascienzaMovies);
+                        break;
+                    case "Commedia":
+                        genreMovies.addAll(commediaMovies);
+                        break;
+                    case "Horror":
+                        genreMovies.addAll(horrorMovies);
+                        break;
+                    default:
+                        break;
+                }
+
+                // If the cache for the selected genre is empty, filter movies based on the genre
+                if (genreMovies.isEmpty()) {
+                    for (Film movie : moviesList) {
+                        if (movie.getGenre().equals(genre)) {
+                            genreMovies.add(movie);
+                        }
+                    }
+                }
 
                 // Calculate dimensions for movie panels
                 int labelWidth = 200;
@@ -408,28 +454,40 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
                 int xOffset = 20;
                 int yOffset = 80;
 
-                // Add panels for each movie to the content pane
-                int row = 0;
-                int col = 0;
-                for (Film movie : genreMovies) {
-                    JPanel moviePanel = createPanel(movie,false);
-                    int x = 20 + col * (labelWidth + xOffset);
-                    int y = yOffset + row * (labelHeight + xOffset);
-                    moviePanel.setBounds(x, y, labelWidth, labelHeight);
-                    contentPane.add(moviePanel);
+                // Batch loading parameters
+                int batchSize = 20; // Number of movies to load per batch
+                int startIndex = 0;
 
-                    col++;
-                    if (col >= maxFilmsPerRow) {
-                        // Move to the next row
-                        col = 0;
-                        row++;
+                // Add panels for each movie batch to the content pane
+                while (startIndex < genreMovies.size()) {
+                    // Calculate the end index for the current batch
+                    int endIndex = Math.min(startIndex + batchSize, genreMovies.size());
+
+                    // Add panels for the current batch
+                    int row = startIndex / maxFilmsPerRow;
+                    int col = startIndex % maxFilmsPerRow;
+                    for (int i = startIndex; i < endIndex; i++) {
+                        Film movie = genreMovies.get(i);
+                        JPanel moviePanel = createPanel(movie, false);
+                        if (moviePanel != null) {
+                            int x = 20 + col * (labelWidth + xOffset);
+                            int y = yOffset + row * (labelHeight + xOffset);
+                            moviePanel.setBounds(x, y, labelWidth, labelHeight);
+                            contentPane.add(moviePanel);
+                            col++;
+                            if (col >= maxFilmsPerRow) {
+                                // Move to the next row
+                                col = 0;
+                                row++;
+                            }
+                        } else {
+                            System.err.println("Error: Movie panel is null for movie " + movie.getNome());
+                        }
                     }
-                }
 
-                // Adjust content pane dimensions to fit all movies
-                int contentWidth = 20 + maxFilmsPerRow * (labelWidth + xOffset);
-                int contentHeight = yOffset + (row + 1) * (labelHeight + xOffset);
-                contentPane.setPreferredSize(new Dimension(contentWidth, contentHeight));
+                    // Increment the start index for the next batch
+                    startIndex = endIndex;
+                }
 
                 // Repaint the content pane to reflect changes
                 contentPane.revalidate();
@@ -449,6 +507,8 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         worker.execute();
     }
 
+
+
     private void setNavbarLabelsEnabled(boolean enabled) {
         azioneNavLabel.setEnabled(enabled);
         drammaNavLabel.setEnabled(enabled);
@@ -461,7 +521,7 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         try (BufferedReader br = new BufferedReader(new FileReader("login.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
-                String[] parts = line.split("\t");
+                String[] parts = line.split(" ");
                 if (parts.length >= 3 && parts[2].equals("1")) {
                     loggedIn = true;
                     // Extract username from email
@@ -483,16 +543,192 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
     private void updateUIBasedOnLoginStatus() {
         if (loggedIn) {
             // If logged in, change the login button to a profile button
-            loginButton.setText("Profile");
-            loginButton.addActionListener(new ActionListener() {
+            contentPane.remove(loginButton);
+
+            profileButton = new JButton("Profilo");
+            profileButton.setBounds(1700, 20, 90, 30); // Adjusted position for login button
+            profileButton.setFont(new Font("Gotham", Font.BOLD, 14));
+            profileButton.setForeground(Color.black);
+            profileButton.setBackground(Color.white);
+            contentPane.add(profileButton);
+
+
+            profileButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     // Handle profile button click
-                    // For example, show user profile information
+                    // Remove all components except search bar and navbar
+                    contentPane.removeAll();
+                    contentPane.add(navBarPanel);
+                    contentPane.add(searchBarPanel);
+
+                    // Create and add new labels
+                    JLabel dettagliLabel = new JLabel("Dettagli");
+                    JLabel abbonamentiLabel = new JLabel("Abbonamenti");
+                    JLabel comunicazioniLabel = new JLabel("Comunicazioni");
+                    JLabel logoutLabel = new JLabel("Log Out");
+
+                    dettagliLabel.setBounds(200, 400, 150, 30);
+                    dettagliLabel.setFont(new Font("Gotham", Font.ITALIC, 20));
+                    dettagliLabel.setForeground(Color.white);
+
+                    abbonamentiLabel.setBounds(200, 450, 150, 30);
+                    abbonamentiLabel.setFont(new Font("Gotham", Font.ITALIC, 20));
+                    abbonamentiLabel.setForeground(Color.white);
+
+                    comunicazioniLabel.setBounds(200, 500, 150, 30);
+                    comunicazioniLabel.setFont(new Font("Gotham", Font.ITALIC, 20));
+                    comunicazioniLabel.setForeground(Color.white);
+
+                    logoutLabel.setBounds(200, 550, 150, 30);
+                    logoutLabel.setFont(new Font("Gotham", Font.ITALIC, 20));
+                    logoutLabel.setForeground(Color.red);
+
+                    dettagliLabel.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            // Create two text fields for email and password
+                            t2 = new JTextField(60);
+                            t3 = new JTextField(60);
+                            JLabel email = new JLabel("Email");
+                            JLabel password = new JLabel("Password");
+                            JButton salva = new JButton("Salva");
+
+                            email.setBounds(400,160,150,30);
+                            t2.setBounds(400, 200, 150, 30);
+
+                            password.setBounds(400,240,150,30);
+                            t3.setBounds(400, 270, 150, 30);
+
+                            salva.setBounds(475,300,100,30);
+
+
+                            contentPane.add(email);
+                            contentPane.add(t2);
+                            contentPane.add(password);
+                            contentPane.add(t3);
+                            contentPane.add(salva);
+
+                            contentPane.revalidate();
+                            contentPane.repaint();
+
+                        }
+
+                        @Override
+                        public void mouseEntered(MouseEvent e) {
+                            dettagliLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Set hand cursor on mouse enter
+                        }
+
+                        @Override
+                        public void mouseExited(MouseEvent e) {
+                            dettagliLabel.setCursor(Cursor.getDefaultCursor()); // Set default cursor back on mouse exit
+                        }
+                    });
+
+
+                    abbonamentiLabel.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseEntered(MouseEvent e) {
+                            abbonamentiLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Set hand cursor on mouse enter
+                        }
+
+                        @Override
+                        public void mouseExited(MouseEvent e) {
+                            abbonamentiLabel.setCursor(Cursor.getDefaultCursor()); // Set default cursor back on mouse exit
+                        }
+                    });
+
+                    comunicazioniLabel.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseEntered(MouseEvent e) {
+                            comunicazioniLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Set hand cursor on mouse enter
+                        }
+
+                        @Override
+                        public void mouseExited(MouseEvent e) {
+                            comunicazioniLabel.setCursor(Cursor.getDefaultCursor()); // Set default cursor back on mouse exit
+                        }
+                    });
+
+                    logoutLabel.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            // Change the value of the loggedIn variable to false
+                            loggedIn = false;
+
+                            // Remove the profile button
+                            contentPane.remove(profileButton);
+
+                            // Add back the login button
+                            contentPane.add(loginButton);
+
+                            // Repaint the content pane to reflect changes
+                            contentPane.revalidate();
+                            contentPane.repaint();
+
+                            // Update the login.txt file
+                            updateLoginFile(username, "0"); // Change "1" to "0" in the login.txt file
+
+                            showHomePage();
+                        }
+
+                        @Override
+                        public void mouseEntered(MouseEvent e) {
+                            logoutLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); // Set hand cursor on mouse enter
+                        }
+
+                        @Override
+                        public void mouseExited(MouseEvent e) {
+                            logoutLabel.setCursor(Cursor.getDefaultCursor()); // Set default cursor back on mouse exit
+                        }
+                    });
+
+
+                    // Add labels to the content pane
+                    contentPane.add(dettagliLabel);
+                    contentPane.add(abbonamentiLabel);
+                    contentPane.add(comunicazioniLabel);
+                    contentPane.add(logoutLabel);
+
+                    // Repaint the content pane to reflect changes
+                    contentPane.revalidate();
+                    contentPane.repaint();
                 }
             });
         }
     }
+
+    private void updateLoginFile(String email, String newValue) {
+        // Define the file path
+        Path path = Paths.get("login.txt");
+
+        try {
+            // Read all lines from the file
+            List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+
+            // Iterate through the lines to find and update the entry with the given email
+            for (int i = 0; i < lines.size(); i++) {
+                String line = lines.get(i);
+                String[] parts = line.split("\\s+");
+                if (parts.length >= 3 && parts[0].trim().equals(email)) {
+                    parts[2] = newValue;
+                    lines.set(i, String.join(" ", parts));
+                    break;
+                }
+            }
+
+            // Write the updated lines back to the file
+            Files.write(path, lines, StandardCharsets.UTF_8);
+
+            // Log success
+            System.out.println("Login status updated successfully for email: " + email);
+        } catch (IOException e) {
+            // Log and handle the exception
+            System.err.println("Error updating login status for email: " + email);
+            e.printStackTrace();
+        }
+    }
+
 
     private void keepUserLoggedIn() {
         if (loggedIn) {
@@ -853,21 +1089,11 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         }
     }
 
-    private boolean isUserLoggedIn() {
-        if (sc != null && sc.isLogin()) {
-            sc.setLogin(true);
-            return true;
-        }
-        sc.setLogin(false);
-        return false;
-    }
-
     private void showHomePage() {
         // Clear the content pane except for the navigation bar, search bar, and login button
         contentPane.removeAll();
         contentPane.add(navBarPanel);
         contentPane.add(searchBarPanel);
-        contentPane.add(loginButton); // Ensure the login button is added back
 
         // Add genre labels to the content pane
         contentPane.add(azioneLabel);
@@ -880,7 +1106,13 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         contentPane.add(vistiLabel);
         contentPane.add(consigliatiLabel);
 
-        showWatchedMovies();
+
+        if(loggedIn) {
+            showWatchedMovies();
+            contentPane.add(loginButton);
+        }
+        else
+            contentPane.add(profileButton);
 
         // Add movie panels back to the content pane
         for (JPanel moviePanel : moviePanels) {
@@ -898,10 +1130,22 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
         contentPane.repaint();
     }
 
+    // Method to initialize the movie index for faster searches
+// Method to initialize the movie index for faster searches
+    private void initializeMovieIndex() {
+        for (Film movie : moviesList) {
+            String firstWord = movie.getNome().toLowerCase().split("\\s+")[0];
+            movieIndex.computeIfAbsent(firstWord, k -> new HashSet<>()).add(movie);
+        }
+    }
+
     private void searchMovies(String searchText) {
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {
+                // Disable the search button at the start of the search
+                SwingUtilities.invokeLater(() -> b1.setEnabled(false));
+
                 // Clear the search results
                 searchResults.clear();
 
@@ -911,55 +1155,75 @@ public class LoginSc extends MioFrame implements ActionListener, WindowListener 
                     return null;
                 }
 
-                // Filter movies based on the search text
-                for (Film movie : moviesList) {
-                    String[] movieNameWords = movie.getNome().toLowerCase().split("\\s+");
-                    if (movieNameWords.length > 0 && movieNameWords[0].startsWith(searchText.toLowerCase())) {
-                        searchResults.add(movie);
+                String lowerCaseSearchText = searchText.toLowerCase();
+                Set<Film> uniqueResults = new HashSet<>();
+
+                // Search using the index
+                for (Map.Entry<String, Set<Film>> entry : movieIndex.entrySet()) {
+                    if (entry.getKey().startsWith(lowerCaseSearchText)) {
+                        uniqueResults.addAll(entry.getValue()
+                                .stream()
+                                .filter(movie -> movie.getNome().toLowerCase().contains(lowerCaseSearchText))
+                                .collect(Collectors.toSet()));
                     }
                 }
+
+                // Add results to the searchResults list from the Set to ensure uniqueness
+                searchResults.addAll(uniqueResults);
 
                 // Clear the content pane except for the navigation bar, search bar, and login button
-                contentPane.removeAll();
-                contentPane.add(navBarPanel);
-                contentPane.add(searchBarPanel);
-                contentPane.add(loginButton); // Ensure the login button is added back
+                SwingUtilities.invokeLater(() -> {
+                    contentPane.removeAll();
+                    contentPane.add(navBarPanel);
+                    contentPane.add(searchBarPanel);
+                    contentPane.add(loginButton); // Ensure the login button is added back
 
-                // Set starting coordinates for search results
-                int startingX = 20;
-                int startingY = 80;
-                int labelWidth = 200;
-                int labelHeight = 250;
-                int maxFilmsPerRow = 8; // Maximum number of films per row
-                int xOffset = 20;
+                    // Set starting coordinates for search results
+                    int startingX = 70;
+                    int startingY = 100;
+                    int labelWidth = 200;
+                    int labelHeight = 300;
+                    int maxFilmsPerRow = 8; // Maximum number of films per row
+                    int xOffset = 20;
 
-                int currentX = startingX;
-                int currentY = startingY;
+                    int currentX = startingX;
+                    int currentY = startingY;
 
-                for (Film movie : searchResults) {
-                    JPanel moviePanel = createPanel(movie,false); // Create a panel for each movie
-                    moviePanel.setBounds(currentX, currentY, labelWidth, labelHeight);
+                    for (Film movie : searchResults) {
+                        JPanel moviePanel = createPanel(movie, false); // Create a panel for each movie
+                        moviePanel.setBounds(currentX, currentY, labelWidth, labelHeight);
 
-                    currentX += labelWidth + xOffset;
-                    if ((currentX + labelWidth + xOffset) > contentPane.getWidth()) {
-                        currentX = startingX;
-                        currentY += labelHeight + xOffset;
+                        currentX += labelWidth + xOffset;
+                        if ((currentX + labelWidth + xOffset) > contentPane.getWidth()) {
+                            currentX = startingX;
+                            currentY += labelHeight + xOffset;
+                        }
+
+                        contentPane.add(moviePanel);
                     }
 
-                    contentPane.add(moviePanel);
-                }
-
-                // Repaint the content pane to reflect changes
-                contentPane.revalidate();
-                contentPane.repaint();
+                    // Repaint the content pane to reflect changes
+                    contentPane.revalidate();
+                    contentPane.repaint();
+                });
 
                 return null;
+            }
+
+            @Override
+            protected void done() {
+                // Re-enable the search button after the search is complete
+                SwingUtilities.invokeLater(() -> b1.setEnabled(true));
             }
         };
 
         // Execute the SwingWorker
         worker.execute();
     }
+
+
+
+
 
     private void openLink(String link) {
         try {

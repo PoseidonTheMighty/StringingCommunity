@@ -68,7 +68,7 @@ public class SignUp extends MioFrame implements ActionListener,WindowListener{
 
                 try {
                     FileWriter fw = new FileWriter("login.txt", true);
-                    fw.write(t1.getText()+"\t"+t2.getText()+"\t0\n"); // Appending "0" to indicate not logged in
+                    fw.write(t1.getText()+" "+t2.getText()+" 0\n"); // Appending "0" to indicate not logged in
                     fw.close();
 
                     // Create a text file with the name before "@" in the email used for registration

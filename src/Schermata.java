@@ -102,13 +102,15 @@ public class Schermata extends MioFrame implements ActionListener, WindowListene
                     StringBuilder fileContent = new StringBuilder();
                     String line;
                     while ((line = br.readLine()) != null) {
-                        if (line.equals(uname + "\t" + pwd + "\t0")) { // Check if login is successful
+                        System.out.println("Line from file: " + line); // Print the line from the file for debugging
+                        if (line.equals(uname + " " + pwd + " 0")) { // Check if login is successful
                             matched = true;
-                            fileContent.append(uname).append("\t").append(pwd).append("\t1").append("\n"); // Change "0" to "1"
+                            fileContent.append(uname).append(" ").append(pwd).append(" 1").append("\n"); // Change "0" to "1"
                         } else {
                             fileContent.append(line).append("\n"); // Keep the line unchanged
                         }
                     }
+
                     fr.close();
 
                     // Write back to the file

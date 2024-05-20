@@ -1,0 +1,9 @@
+Il regno del pianeta delle scimmie,false
+Divergent,false
+Godzilla vs Kong Un nuovo impero,false
+Avengers Infinity War,true
+Godzilla vs Kong Un nuovo impero,0
+Avengers Age of Ultron,1
+E colpa mia,1
+Avengers Infinity War,1
+Divergent,1
