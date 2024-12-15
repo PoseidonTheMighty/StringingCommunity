@@ -71,6 +71,7 @@ Welcome to **Stringing Community**, a Java-based application designed to enhance
 ![image](https://github.com/user-attachments/assets/d204879e-356a-4367-b984-318bc4ea0df6)
 
 ![image](https://github.com/user-attachments/assets/f617eb8c-fe45-4d6f-8477-1e96dd3df5cc)
+![image](https://github.com/user-attachments/assets/d77dd986-af96-4f97-b360-dfae5adede5a)
 
 ---
 
