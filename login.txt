@@ -1,2 +1,3 @@
-ciao@gmail.com ciao1 1
+ciao@gmail.com ciao1 0
 
+imraj@gmail.com man 1
